@@ -1,100 +1,88 @@
-import React from 'react'
+const people = [
+    {
+        name: 'Leslie Alexander',
+        email: 'leslie.alexander@example.com',
+        role: 'Co-Founder / CEO',
+        imageUrl:
+            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+        lastSeen: '3h ago',
+        lastSeenDateTime: '2023-01-23T13:23Z',
+    },
+    {
+        name: 'Michael Foster',
+        email: 'michael.foster@example.com',
+        role: 'Co-Founder / CTO',
+        imageUrl:
+            'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+        lastSeen: '3h ago',
+        lastSeenDateTime: '2023-01-23T13:23Z',
+    },
+    {
+        name: 'Dries Vincent',
+        email: 'dries.vincent@example.com',
+        role: 'Business Relations',
+        imageUrl:
+            'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+        lastSeen: null,
+    },
+    {
+        name: 'Lindsay Walton',
+        email: 'lindsay.walton@example.com',
+        role: 'Front-end Developer',
+        imageUrl:
+            'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+        lastSeen: '3h ago',
+        lastSeenDateTime: '2023-01-23T13:23Z',
+    },
+    {
+        name: 'Courtney Henry',
+        email: 'courtney.henry@example.com',
+        role: 'Designer',
+        imageUrl:
+            'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+        lastSeen: '3h ago',
+        lastSeenDateTime: '2023-01-23T13:23Z',
+    },
+    
+]
 
-const Sidebar = () => {
+export default function Sidebar() {
     return (
-        <div>
-            <div className='flex flex-row justify-between text-white font-semibold p-5 bg-green-600 z-10'>
+        <div className=" h-screen">
+            <div className='flex flex-row justify-between text-white font-semibold p-5 bg-blue-900 z-10 h-[10vh]'>
                 <div className='ms-5'>Chats</div>
                 <div className='ms-5'>Status</div>
                 <div className='ms-5'>Call</div>
             </div>
-            <div className=' overflow-y-scroll h-[80vh]'>
-                <div className=' relative'>
-                    <div>
-                        <ul role="list" class="z-0 p-6 divide-y divide-slate-200">
-                            <li class="flex py-4 first:pt-0 last:pb-0">
-                                <img class="h-10 w-10 rounded-full" src="img/avatar.png" alt="" />
-                                <div class="ml-3 overflow-hidden">
-                                    <p class="text-sm font-medium text-slate-900">Sushil Rathore</p>
-                                    <p class="text-sm text-slate-500 truncate">hi...</p>
+            <ul role="list" className="divide-y divide-gray-100 ms-5 h-[90vh]">
+                {people.map((person) => (
+                    <li key={person.email} className="flex py-5 hover:bg-blue-200">
+                        <div className="flex">
+                            <img className="h-12 w-12 flex-none rounded-full bg-gray-50" src={person.imageUrl} alt="" />
+                            <div className="min-w-0 flex-auto">
+                                <p className="text-sm font-semibold leading-6 text-gray-900">{person.name}</p>
+                                <p className="mt-1 truncate text-xs leading-5 text-gray-500">{person.email}</p>
+                            </div>
+                        </div>
+                        <div className="sm:flex sm:flex-col sm:items-end">
+                            
+                            {person.lastSeen ? (
+                                <p className="mt-1 text-xs leading-5 text-gray-500">
+                                    Last seen <time dateTime={person.lastSeenDateTime}>{person.lastSeen}</time>
+                                </p>
+                            ) : (
+                                <div className="mt-1 flex items-center gap-x-1.5 m-5">
+                                    <div className="flex-none rounded-full bg-emerald-500/20 p-1">
+                                        <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                                    </div>
+                                    <p className="text-xs leading-5 text-gray-500">Online</p>
                                 </div>
-                            </li>
-                            <li class="flex py-4 first:pt-0 last:pb-0">
-                                <img class="h-10 w-10 rounded-full" src="img/avatar.png" alt="" />
-                                <div class="ml-3 overflow-hidden">
-                                    <p class="text-sm font-medium text-slate-900">Sushil Rathore</p>
-                                    <p class="text-sm text-slate-500 truncate">hi...</p>
-                                </div>
-                            </li>
-                            <li class="flex py-4 first:pt-0 last:pb-0">
-                                <img class="h-10 w-10 rounded-full" src="img/avatar.png" alt="" />
-                                <div class="ml-3 overflow-hidden">
-                                    <p class="text-sm font-medium text-slate-900">Sushil Rathore</p>
-                                    <p class="text-sm text-slate-500 truncate">hi...</p>
-                                </div>
-                            </li>
-                            <li class="flex py-4 first:pt-0 last:pb-0">
-                                <img class="h-10 w-10 rounded-full" src="img/avatar.png" alt="" />
-                                <div class="ml-3 overflow-hidden">
-                                    <p class="text-sm font-medium text-slate-900">Sushil Rathore</p>
-                                    <p class="text-sm text-slate-500 truncate">hi...</p>
-                                </div>
-                            </li>
-                            <li class="flex py-4 first:pt-0 last:pb-0">
-                                <img class="h-10 w-10 rounded-full" src="img/avatar.png" alt="" />
-                                <div class="ml-3 overflow-hidden">
-                                    <p class="text-sm font-medium text-slate-900">Sushil Rathore</p>
-                                    <p class="text-sm text-slate-500 truncate">hi...</p>
-                                </div>
-                            </li>
-                            <li class="flex py-4 first:pt-0 last:pb-0">
-                                <img class="h-10 w-10 rounded-full" src="img/avatar.png" alt="" />
-                                <div class="ml-3 overflow-hidden">
-                                    <p class="text-sm font-medium text-slate-900">Sushil Rathore</p>
-                                    <p class="text-sm text-slate-500 truncate">hi...</p>
-                                </div>
-                            </li>
-                            <li class="flex py-4 first:pt-0 last:pb-0">
-                                <img class="h-10 w-10 rounded-full" src="img/avatar.png" alt="" />
-                                <div class="ml-3 overflow-hidden">
-                                    <p class="text-sm font-medium text-slate-900">Sushil Rathore</p>
-                                    <p class="text-sm text-slate-500 truncate">hi...</p>
-                                </div>
-                            </li>
-                            <li class="flex py-4 first:pt-0 last:pb-0">
-                                <img class="h-10 w-10 rounded-full" src="img/avatar.png" alt="" />
-                                <div class="ml-3 overflow-hidden">
-                                    <p class="text-sm font-medium text-slate-900">Sushil Rathore</p>
-                                    <p class="text-sm text-slate-500 truncate">hi...</p>
-                                </div>
-                            </li>
-                            <li class="flex py-4 first:pt-0 last:pb-0">
-                                <img class="h-10 w-10 rounded-full" src="img/avatar.png" alt="" />
-                                <div class="ml-3 overflow-hidden">
-                                    <p class="text-sm font-medium text-slate-900">Sushil Rathore</p>
-                                    <p class="text-sm text-slate-500 truncate">hi...</p>
-                                </div>
-                            </li>
-                            <li class="flex py-4 first:pt-0 last:pb-0">
-                                <img class="h-10 w-10 rounded-full" src="img/avatar.png" alt="" />
-                                <div class="ml-3 overflow-hidden">
-                                    <p class="text-sm font-medium text-slate-900">Sushil Rathore</p>
-                                    <p class="text-sm text-slate-500 truncate">hi...</p>
-                                </div>
-                            </li>
-
-                        </ul>
-                    </div>
-
-                </div>
-                </div>
-                <div className='fixed justify-end'>
-                    <svg className='w-12 h-12 z-10' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="plus-button"><g data-name="Layer 2"><circle cx="12" cy="12" r="10.75" fill="#4285f4"></circle><path fill="#fff" d="M12,16.75a.7502.7502,0,0,1-.75-.75V8a.75.75,0,0,1,1.5,0v8A.7502.7502,0,0,1,12,16.75Z"></path><path fill="#fff" d="M16,12.75H8a.75.75,0,0,1,0-1.5h8a.75.75,0,0,1,0,1.5Z"></path></g></svg>
-                </div>
-
-          
+                            )}
+                        </div>
+                    </li>
+                ))}
+            </ul>
         </div>
     )
 }
 
-export default Sidebar
