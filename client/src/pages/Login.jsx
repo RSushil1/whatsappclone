@@ -15,7 +15,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/auth/login", {
+      const res = await axios.post("http://localhost:8000/api/auth/login", {
         email,
         password,
       });
@@ -26,8 +26,8 @@ export default function Login() {
           user: res.data.user,
           token: res.data.token,
         });
-        localStorage.setItem("auth", JSON.stringify(res.data));
-        navigate("/chatroom");
+        localStorage.setItem("whatsapp", JSON.stringify(res.data));
+        navigate("/chatroom/user");
       } else {
         toast.error(res.data.message);
       }

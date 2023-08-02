@@ -16,12 +16,6 @@ export const registerController = async (req, res) => {
     if (!password) {
       return res.send({ message: "Password is Required" });
     }
-    if (!phone) {
-      return res.send({ message: "Phone no is Required" });
-    }
-    if (!address) {
-      return res.send({ message: "Address is Required" });
-    }
     if (!answer) {
       return res.send({ message: "Answer is Required" });
     }
@@ -94,7 +88,7 @@ export const loginController = async (req, res) => {
     }
     //token
     const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "3d",
+      expiresIn: "10d",
     });
     res.status(200).send({
       success: true,
@@ -200,56 +194,3 @@ export const updateProfileController = async (req, res) => {
   }
 };
 
-//orders
-export const getOrdersController = async (req, res) => {
-  try {
-    const orders = await orderModel
-      .find({ buyer: req.user._id })
-      .populate("products", "-photo")
-      .populate("buyer", "name");
-    res.json(orders);
-  } catch (error) {
-    res.status(500).send({
-      success: false,
-      message: "Error WHile Geting Orders",
-      error,
-    });
-  }
-};
-//orders
-export const getAllOrdersController = async (req, res) => {
-  try {
-    const orders = await orderModel
-      .find({})
-      .populate("products", "-photo")
-      .populate("buyer", "name")
-      .sort({ createdAt: "-1" });
-    res.json(orders);
-  } catch (error) {
-    res.status(500).send({
-      success: false,
-      message: "Error WHile Geting Orders",
-      error,
-    });
-  }
-};
-
-//order status
-export const orderStatusController = async (req, res) => {
-  try {
-    const { orderId } = req.params;
-    const { status } = req.body;
-    const orders = await orderModel.findByIdAndUpdate(
-      orderId,
-      { status },
-      { new: true }
-    );
-    res.json(orders);
-  } catch (error) {
-    res.status(500).send({
-      success: false,
-      message: "Error While Updateing Order",
-      error,
-    });
-  }
-};

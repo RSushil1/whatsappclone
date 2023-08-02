@@ -13,7 +13,7 @@ const AuthProvider = ({children}) => {
   axios.defaults.headers.common["Authorization"] = auth?.token;
 
     useEffect(()=>{
-       const data = localStorage.getItem('auth');
+       const data = localStorage.getItem('whatsapp');
        if(data){
          const parseData = JSON.parse(data);
          setAuth({
@@ -23,7 +23,7 @@ const AuthProvider = ({children}) => {
          })
        } 
        // eslint-disable-next-line
-    },[]);
+      },[]);
   return (
     <AuthContext.Provider value={[auth,setAuth]}>
        {children}

@@ -5,7 +5,6 @@ import { BsEmojiSmile } from 'react-icons/bs';
 import { AiOutlineSend } from 'react-icons/ai';
 
 const Chatroom = () => {
-    const [name, setname]= useState("");
     const [messageByMe, setMessageByMe] = useState('');
     const [messages, setMessages] = useState([]);
 
@@ -39,9 +38,9 @@ const Chatroom = () => {
             <div className='flex flex-row justify-between text-white font-semibold p-5 bg-blue-900 z-10 h-[10vh]'>
                 <div className='ms-3'>
                     <div className="flex mt-0">
-                        <img className="h-8 w-8 rounded-full" src="img/avatar.png" alt="user" />
+                        <img className="h-8 w-8 rounded-full" src="img\user.png" alt="user" />
                         <div className="ml-3 overflow-hidden">
-                            <p className="text-sm font-medium text-white">Sushil Rathore</p>
+                            <p className="text-sm font-medium text-white"></p>
                         </div>
                     </div>
 
@@ -65,7 +64,7 @@ const Chatroom = () => {
 
             </div>
             <div className='flex flex-row text-white font-semibold p-3 bg-blue-900 z-10 h-[10vh]'>
-                <div className='ms-5 w-[5%]'><BsEmojiSmile /></div>
+                <div className='ms-5 w-[5%] p-2'><BsEmojiSmile className='h-5 w-5' /></div>
                 <form className='ms-5 flex flex-row w-[95%]' onSubmit={handleSend}>
                     <input name="messageByMe"
                         value={messageByMe}

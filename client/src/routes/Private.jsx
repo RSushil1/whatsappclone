@@ -11,7 +11,7 @@ const PrivateRoute = () => {
   useEffect(() => {
     const authCheck = async () => {
       try {
-        const res = await axios.get("/api/auth/user-auth", {
+        const res = await axios.get("http://localhost:8000/api/auth/user-auth", {
           headers: {
             Authorization: auth?.token,
           },

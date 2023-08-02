@@ -1,23 +1,28 @@
 import React, { useContext, useEffect, useState } from 'react'
 import io from 'socket.io-client'
+import { UseAuth } from './Auth'
 const SocketContext = React.createContext()
 
 export function useSocket(){
     return useContext(SocketContext)
 }
 
-const SocketProvider = ({id, children}) => {
-    const [socket, setSocket] = useState();
+const SocketProvider = ({children}) => {
+  const [socket, setSocket] = useState();
+  const [auth] = UseAuth();
+  const email = auth?.user?.email
+
+    console.log(email)
 
     useEffect(()=>{
-        const newSocket = io('http://localhost:8000',{query:{id}})
+        const newSocket = io('http://localhost:8000',{query:{email}})
         setSocket(newSocket)
         return ()=>newSocket.close()
-    },[id])
+    },[email])
   return (
-    <div>
-      
-    </div>
+    <SocketContext.Provider value={socket}>
+      {children}
+    </SocketContext.Provider>
   )
 }
 
