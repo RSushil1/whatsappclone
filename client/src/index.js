@@ -6,13 +6,11 @@ import App from './App';
 import { AuthProvider } from './context/Auth';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import SocketProvider from './context/SocketProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <AuthProvider>
   <BrowserRouter>
-    <SocketProvider>
   <ToastContainer
         position="bottom-right"
         autoClose={3000}
@@ -28,7 +26,6 @@ root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
-  </SocketProvider>
   </BrowserRouter>
   </AuthProvider>
  

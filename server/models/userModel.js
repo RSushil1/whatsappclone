@@ -20,6 +20,40 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    imgUrl: {
+      type: String,
+      default: "./default.png",
+    },
+    contacts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+    ],
+    chats: [
+      {
+        withUser: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "users",
+        },
+        messages: [
+          {
+            sender: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "users",
+            },
+            content: {
+              type: String,
+              required: true,
+            },
+            timestamp: {
+              type: Date,
+              default: Date.now,
+            },
+          },
+        ],
+      },
+    ],
   },
   { timestamps: true }
 );
