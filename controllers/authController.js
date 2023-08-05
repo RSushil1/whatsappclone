@@ -2,10 +2,15 @@ import userModel from "../models/userModel.js";
 
 import { comparePassword, hashPassword } from "./../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
+import fs from "fs";
 
 export const registerController = async (req, res) => {
   try {
-    const { name, email, password, phone, address, answer } = req.body;
+    const { name, email, password, answer,photo } = req.body;
+    console.log(name,photo)
+
+    // const { photo } = req.files;
+    // console.log(photo)
     //validations
     if (!name) {
       return res.send({ error: "Name is Required" });
@@ -34,11 +39,15 @@ export const registerController = async (req, res) => {
     const user = await new userModel({
       name,
       email,
-      phone,
-      address,
       password: hashedPassword,
       answer,
-    }).save();
+      
+    });
+    if (photo) {
+      user.photo.data = fs.readFileSync(photo.path);
+      user.photo.contentType = photo.type;
+    }
+    await user.save();
 
     res.status(201).send({
       success: true,
@@ -97,7 +106,7 @@ export const loginController = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
-        imgUrl: user.imgUrl,
+        photo: user.photo,
       },
       token,
     });
@@ -161,8 +170,9 @@ export const testController = (req, res) => {
 //update profile
 export const updateProfileController = async (req, res) => {
   try {
-    const { name, email, password, address, phone } = req.body;
+    const { name} = req.body;
     const user = await userModel.findById(req.user._id);
+    const { photo } = req.files;
     //password
     if (password && password.length < 6) {
       return res.json({ error: "Passsword is required and 6 character long" });
@@ -173,11 +183,14 @@ export const updateProfileController = async (req, res) => {
       {
         name: name || user.name,
         password: hashedPassword || user.password,
-        phone: phone || user.phone,
-        address: address || user.address,
       },
       { new: true }
     );
+    if (photo) {
+      user.photo.data = fs.readFileSync(photo.path);
+      user.photo.contentType = photo.type;
+    }
+    await user.save();
     res.status(200).send({
       success: true,
       message: "Profile Updated SUccessfully",

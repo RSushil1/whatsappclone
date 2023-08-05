@@ -9,7 +9,7 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function Sidebar({ handleChatWith }) {
+export default function Sidebar({ handleChatWith,viewProfile }) {
     const [auth] = UseAuth();
     // const [chatWith, setChatWith] = useState("");
     let [categories] = useState({
@@ -123,6 +123,9 @@ export default function Sidebar({ handleChatWith }) {
         const dataToSend = person;
         handleChatWith(dataToSend); // Call the function passed as prop with the data
     };
+    const openProfile = (data) => {
+        viewProfile(data);
+      };
 
     return (
         <div className=" h-screen">
@@ -193,7 +196,7 @@ export default function Sidebar({ handleChatWith }) {
                 </Tab.Group>
             </div>
             <div className='flex flex-row justify-between text-white font-semibold p-1 bg-blue-900 z-10 h-[10vh]'>
-                <ProfileButton name ={auth?.user?.name} id={auth?.user.email} imgUrl={auth?.user?.imgUrl}/>
+                <ProfileButton name ={auth?.user?.name} id={auth?.user?.email} photo={auth?.user?.photo} openProfile={openProfile} />
                 <div>
                     <AddContactModal />
                 </div>

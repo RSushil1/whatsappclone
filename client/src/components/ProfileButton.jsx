@@ -1,20 +1,27 @@
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { ChevronUpIcon } from '@heroicons/react/20/solid'
-import EditProfileModal from './EditProfileModal'
 
 export default function ProfileButton(props) {
     const name = props.name
     const id = props.id
-    const imgUrl = props.imgUrl
-    const [openProfile, setOpenProfile] = useState(false);
+    const photo = props.photo
+    console.log(photo)
+    
+
+    const handleViewProfile = (data)=>{
+      const dataToSend = data;
+      props.openProfile(dataToSend);
+
+    }
+
   return (
     <div className="top-16 w-62 text-right">
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="h-[9vh] px-3 inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 py-1 text-sm font-medium text-white hover:bg-opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
           <div className="flex flex-row">
-                    <div className="w-10 h-10" ><img className="rounded-full" src={imgUrl} alt="profile" /></div>
+                    <div className="w-10 h-10" ><img className="rounded-full" src={photo} alt="profile" /></div>
                     <div className='ms-3'>Welcome: {name} <br /> ID: {id}</div>
                 </div>
             <ChevronUpIcon
@@ -37,7 +44,7 @@ export default function ProfileButton(props) {
               <Menu.Item>
                 {({ active }) => (
                   <button
-                   onClick={openModal}
+                    onClick={() => handleViewProfile(true)}
                     className={`${
                       active ? 'bg-violet-500 text-white' : 'text-gray-900'
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
@@ -53,7 +60,7 @@ export default function ProfileButton(props) {
                         aria-hidden="true"
                       />
                     )}
-                   Edit Modal
+                   View Profile
                   </button>
                 )}
               </Menu.Item>
