@@ -2,15 +2,13 @@ import userModel from "../models/userModel.js";
 
 import { comparePassword, hashPassword } from "./../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
-import fs from "fs";
 
 
 
-
+// register user by signup
 export const registerController = async (req, res) => {
   try {
-    const { name, email, password, answer } = req.body;
-    const photo = req.file.filename;
+    const { name, email, password, answer,photo } = req.body;
 
     //validations
     if (!name) {
@@ -61,7 +59,7 @@ export const registerController = async (req, res) => {
   }
 };
 
-//POST LOGIN
+//POST Login user
 export const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -155,44 +153,43 @@ export const forgotPasswordController = async (req, res) => {
   }
 };
 
-//test controller
-export const testController = (req, res) => {
+// get Profile
+export const getProfileController = async (req, res) => {
   try {
-    res.send("Protected Routes");
+    const profile = await userModel.findById(req.user._id);
+    res.json(profile);
   } catch (error) {
-
-    res.send({ error });
+    res.status(500).send({
+      success: false,
+      message: "Error WHile Geting profile",
+      error,
+    });
   }
 };
 
 //update profile
 export const updateProfileController = async (req, res) => {
   try {
-    const { name} = req.body;
+    const { name,bio,photo,coverPhoto} = req.body;
     const user = await userModel.findById(req.user._id);
-    const { photo } = req.files;
-    //password
-    if (password && password.length < 6) {
-      return res.json({ error: "Passsword is required and 6 character long" });
-    }
-    const hashedPassword = password ? await hashPassword(password) : undefined;
+    
+    // const hashedPassword = password ? await hashPassword(password) : undefined;
     const updatedUser = await userModel.findByIdAndUpdate(
-      req.user._id,
+      user._id,
       {
         name: name || user.name,
-        password: hashedPassword || user.password,
+        bio: bio || user.bio,
+        photo: photo || user.photo,
+        coverPhoto: coverPhoto || user.coverPhoto,
+        
+        // password: hashedPassword || user.password,
       },
       { new: true }
     );
-    if (photo) {
-      user.photo.data = fs.readFileSync(photo.path);
-      user.photo.contentType = photo.type;
-    }
     await user.save();
     res.status(200).send({
       success: true,
       message: "Profile Updated SUccessfully",
-      updatedUser,
     });
   } catch (error) {
     res.status(400).send({
@@ -202,4 +199,39 @@ export const updateProfileController = async (req, res) => {
     });
   }
 };
+
+//update contacts
+export const updateContacts = async (req, res) => {
+  try {
+    const {email} = req.body;
+    const user = await userModel.findById(req.user._id);
+
+    const adduser = await userModel.findOne({ email });
+    const id = adduser._id;
+    console.log(id)
+
+    if (!adduser) {
+      return res.status(404).json({ message: "contact not found" });
+    }
+    // Add the contact to the user's contacts list
+    user.contacts.push(id);
+    await user.save();
+
+    res.status(200).send({
+      success: true,
+      message: "Contacts added successfully",
+      user
+    });
+
+   
+  
+  } catch (error) {
+    res.status(400).send({
+      success: false,
+      message: "Error WHile Update profile",
+      error,
+    });
+  }
+};
+
 

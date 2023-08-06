@@ -23,6 +23,12 @@ const userSchema = new mongoose.Schema(
     photo: {
       type: String
     },
+    bio: {
+      type: String
+    },
+    coverPhoto: {
+      type: String
+    },
     contacts: [
       {
         type: mongoose.Schema.Types.ObjectId,

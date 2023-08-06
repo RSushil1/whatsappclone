@@ -1,108 +1,70 @@
-import React, { useState } from 'react';
-import { UseAuth } from '../context/Auth';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import UpdateProfileModal from './form/UpdateProfileModal';
+import { UseAuth } from '../context/Auth';
 
-const Profile = (props) => {
-  const [auth, setAuth] = UseAuth();
-  const [name, setName] = useState('');
-  const [photo, setPhoto] = useState(''); // Change to null to handle File object
+const Profile = () => {
+  const [profile, setProfile] = useState("");
+  const [auth, setAuth] = UseAuth()
 
-  // form function
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const getProfile = async () => {
     try {
-      const formData = new FormData(); // Create a new FormData object
-      formData.append('name', name); // Append name to the form data
-      formData.append('photo', photo); // Append the photo file to the form data
+      const res = await axios.get('http://localhost:8000/api/auth/profile');
+      setProfile(res.data);
+      setAuth({
+        ...auth,
+        user: res.data,
+      });
+      console.log(auth)
+      localStorage.setItem("whatsapp", JSON.stringify(auth));
 
-      const { data } = await axios.put(`http://localhost:8000/api/auth/profile`, formData);
-
-      if (data?.error) {
-        toast.error(data.error);
-      } else {
-        setAuth({ ...auth, user: data?.updatedUser });
-        let ls = localStorage.getItem('auth');
-        ls = JSON.parse(ls);
-        ls.user = data.updatedUser;
-        localStorage.setItem('auth', JSON.stringify(ls));
-        toast.success('Profile Updated Successfully');
-      }
     } catch (error) {
-      console.log(error);
-      toast.error('Something went wrong');
+      toast.error("Server not responded, contact to service");
     }
-  };
+  }
+
+  useEffect(() => {
+    getProfile();
+  }, [])
 
   return (
     <div>
-      <div className='h-[30vh] bg-amber-200'></div>
-      <div>
-      <div><img className='h-20 w-20 rounded-full -translate-y-10 translate-x-10' src={auth?.user.photo.data.data} alt={auth?.user?.name} /></div>
-       <div>
-       <form onSubmit={handleSubmit}>
-      <div className="space-y-12">
-        <div className="border-b border-gray-900/10 pb-12">
-          <h2 className="text-base font-semibold leading-7 text-gray-900">Profile</h2>
-          <p className="mt-1 text-sm leading-6 text-gray-600">
-            This information will be displayed publicly so be careful what you share.
-          </p>
+      <div className='h-[90vh] m-5 justify-center shadow-2xl bg-white rounded-lg p-3 overflow-y-auto'>
 
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-4">
-              <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
-                name
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    name="name"
-                    id="name"
-                    autoComplete="name"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                    placeholder={auth?.user.name}
-                  />
-                </div>
-              </div>
-            </div>
+        <div><img className='rounded-lg w-full bg-blue-500 h-[30vh]' src={auth?.user?.coverPhoto} alt={auth?.user?.name} /></div>
+        <div className='flex flex-row m-3'>
+        <div className='w-[20%]'><img className='h-32 w-32 rounded-full' src={auth?.user?.photo} alt={auth?.user?.name} />
+        <UpdateProfileModal/></div>
 
-            <div className="mb-3">
-                <label className="w-full h-20">
-                  <input
-                    type="file"
-                    name="photo"
-                    accept="image/*"
-                    onChange={(e) => setPhoto(e.target.files)}
-                    
-                    className='w-full h-20'
-                  />
-                </label>
+        <div className='w-[80%]'>
+          <div className="px-4 sm:px-0">
+            <h3 className="text-base font-semibold leading-7 text-gray-900">Whatsapp Profile</h3>
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">Personal details</p>
+          </div>
+          <div className="mt-1">
+           
+              <div className="px-4 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt className="text-sm font-medium leading-6 text-gray-900">Name:</dt>
+                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{auth?.user?.name}</dd>
               </div>
+              <div className="px-4 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt className="text-sm font-medium leading-6 text-gray-900">Email address</dt>
+                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{auth?.user?.email}</dd>
+              </div>
+              <div className="px-4 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt className="text-sm font-medium leading-6 text-gray-900">Bio</dt>
+                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  {auth?.user?.bio}
+                </dd>
+              </div>
+             
+          
           </div>
         </div>
-        </div>
 
-       
-
-           
-
-      <div className="mt-6 flex items-center justify-end gap-x-6">
-        <button type="button" className="text-sm font-semibold leading-6 text-gray-900">
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          Save
-        </button>
       </div>
-    </form>
-       </div>
-      </div>
+    </div>
     </div>
   )
 }

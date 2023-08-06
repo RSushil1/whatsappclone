@@ -4,31 +4,17 @@ import {
   loginController,
   forgotPasswordController,
   updateProfileController,
+  getProfileController,
+  updateContacts,
 } from "../controllers/authController.js";
 import {requireSignIn } from "../middlewares/authMiddleware.js";
-import multer from 'multer';
-
-// Multer storage configuration to handle file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Store uploaded files in the "uploads" folder
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  },
-});
-
-const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB file size limit
-});
 
 //router object
 const router = express.Router();
 
 //routing
 //REGISTER || METHOD POST
-router.post("/signup", upload.single('photo'), registerController);
+router.post("/signup", registerController);
 
 //LOGIN || POST
 router.post("/login", loginController);
@@ -41,8 +27,14 @@ router.get("/user-auth", requireSignIn, (req, res) => {
   res.status(200).send({ ok: true });
 });
 
+//get profile
+router.get("/profile", requireSignIn, getProfileController);
+
 //update profile
 router.put("/profile", requireSignIn, updateProfileController);
+
+//update profile
+router.post("/contacts", requireSignIn, updateContacts);
 
 
 export default router;
