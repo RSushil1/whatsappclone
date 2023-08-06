@@ -4,13 +4,14 @@ import { comparePassword, hashPassword } from "./../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
 import fs from "fs";
 
+
+
+
 export const registerController = async (req, res) => {
   try {
-    const { name, email, password, answer,photo } = req.body;
-    console.log(name,photo)
+    const { name, email, password, answer } = req.body;
+    const photo = req.file.filename;
 
-    // const { photo } = req.files;
-    // console.log(photo)
     //validations
     if (!name) {
       return res.send({ error: "Name is Required" });
@@ -41,12 +42,9 @@ export const registerController = async (req, res) => {
       email,
       password: hashedPassword,
       answer,
+      photo,
       
     });
-    if (photo) {
-      user.photo.data = fs.readFileSync(photo.path);
-      user.photo.contentType = photo.type;
-    }
     await user.save();
 
     res.status(201).send({

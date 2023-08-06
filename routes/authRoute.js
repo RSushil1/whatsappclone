@@ -6,13 +6,29 @@ import {
   updateProfileController,
 } from "../controllers/authController.js";
 import {requireSignIn } from "../middlewares/authMiddleware.js";
+import multer from 'multer';
+
+// Multer storage configuration to handle file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Store uploaded files in the "uploads" folder
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB file size limit
+});
 
 //router object
 const router = express.Router();
 
 //routing
 //REGISTER || METHOD POST
-router.post("/register", registerController);
+router.post("/signup", upload.single('photo'), registerController);
 
 //LOGIN || POST
 router.post("/login", loginController);
