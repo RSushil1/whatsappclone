@@ -6,6 +6,7 @@ import {
   updateProfileController,
   getProfileController,
   updateContacts,
+  getContacts,
 } from "../controllers/authController.js";
 import {requireSignIn } from "../middlewares/authMiddleware.js";
 
@@ -35,6 +36,9 @@ router.put("/profile", requireSignIn, updateProfileController);
 
 //update profile
 router.post("/contacts", requireSignIn, updateContacts);
+
+//update profile
+router.get("/contacts", requireSignIn, getContacts);
 
 
 export default router;

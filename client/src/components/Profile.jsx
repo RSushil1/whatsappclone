@@ -16,7 +16,6 @@ const Profile = () => {
         ...auth,
         user: res.data,
       });
-      console.log(auth)
       localStorage.setItem("whatsapp", JSON.stringify(auth));
 
     } catch (error) {

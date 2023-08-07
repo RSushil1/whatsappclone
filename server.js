@@ -25,7 +25,9 @@ const server = http.createServer(app); // Create HTTP server instance
 
 
 //middelwares
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000'
+  }));
 // app.use(express.json());
 
 // Increase payload size limits for JSON and URL-encoded bodies
@@ -33,14 +35,21 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Socket.IO configuration
-const io = new Server(server); // Pass the HTTP server instance to the Socket.IO Server
+const io = new Server(server, {
+    cors: {
+      origin: 'http://localhost:3000',
+      methods: ['GET', 'POST'],
+      allowedHeaders: ['my-custom-header'],
+      credentials: true
+    }
+  }); // Pass the HTTP server instance to the Socket.IO Server
 
 io.on('connection', socket => {
     const id = socket.handshake.query.id;
     socket.join(id);
+    console.log(id)
     
     socket.on('send-message', ({ recipients, text }) => {
-        console.log("hello")
         recipients.forEach(recipient => {
             const newRecipients = recipients.filter(r => r !== recipient);
             newRecipients.push(id);
@@ -62,4 +71,5 @@ app.use("/api/auth", authRoutes);
 server.listen(PORT, () => {
     console.log(`Server Running on ${process.env.DEV_MODE} mode on port ${PORT}`);
 });
+
 

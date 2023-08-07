@@ -1,12 +1,14 @@
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { ChevronUpIcon } from '@heroicons/react/20/solid'
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function ProfileButton(props) {
     const name = props.name
     const id = props.id
     const photo = props.photo
-    console.log(photo)
+    const navigate = useNavigate();
     
 
     const handleViewProfile = (data)=>{
@@ -14,6 +16,12 @@ export default function ProfileButton(props) {
       props.openProfile(dataToSend);
       console.log(dataToSend)
 
+    }
+
+    const handleLogout = ()=>{
+      localStorage.setItem('whatsapp','');
+      toast("Logout successfully")
+      navigate('/')
     }
 
   return (
@@ -70,6 +78,7 @@ export default function ProfileButton(props) {
               <Menu.Item>
                 {({ active }) => (
                   <button
+                  onClick={handleLogout}
                     className={`${
                       active ? 'bg-violet-500 text-white' : 'text-gray-900'
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}

@@ -10,15 +10,15 @@ export function useSocket(){
 const SocketProvider = ({children}) => {
   const [socket, setSocket] = useState();
   const [auth] = UseAuth();
-  const email = auth?.user?.email
+  const id = auth?.user?._id
 
-    console.log(email)
+    console.log(id)
 
     useEffect(()=>{
-        const newSocket = io('http://localhost:8000',{query:{email}})
+        const newSocket = io('http://localhost:8000',{query:{id}})
         setSocket(newSocket)
         return ()=>newSocket.close()
-    },[email])
+    },[id])
   return (
     <SocketContext.Provider value={socket}>
       {children}
