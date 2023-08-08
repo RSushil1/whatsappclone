@@ -43,7 +43,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                 <Tab.Group>
                     <Tab.List className=" flex space-x-1 rounded-xl bg-blue-900/20 p-1">
                         <Tab
-                            key={1}
+                            key="chats"
                             className={({ selected }) =>
                                 classNames(
                                     'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700',
@@ -57,7 +57,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                             Chat
                         </Tab>
                         <Tab
-                            key={2}
+                            key="contacts"
                             className={({ selected }) =>
                                 classNames(
                                     'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700',
@@ -71,7 +71,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                             Contacts
                         </Tab>
                         <Tab
-                            key={3}
+                            key="calls"
                             className={({ selected }) =>
                                 classNames(
                                     'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700',
@@ -88,7 +88,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                     </Tab.List>
                     <Tab.Panels className="mt-2">
                             <Tab.Panel
-                                key={11}
+                                key="chats"
                                 className={classNames(
                                     'rounded-xl bg-white p-3',
                                     'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
@@ -117,6 +117,86 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
 
                                                 <NavLink
                                                     onClick={() => openChatWith(chat)}
+                                                    className={classNames(
+                                                        'absolute inset-0 rounded-md',
+                                                        'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2'
+                                                    )}
+                                                />
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </Tab.Panel>
+                            <Tab.Panel
+                                key="contacts"
+                                className={classNames(
+                                    'rounded-xl bg-white p-3',
+                                    'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
+                                )}
+                            >
+                                <ul>
+                                    {contacts.map((contact) => (
+                                        <li
+                                            key={contact._id}
+                                            className="relative rounded-md p-3 hover:bg-gray-300"
+                                        >
+                                            <div className=" flex flex-row">
+                                                <div className="w-12 h-12">
+                                                    <img className=" rounded-full" src={contact.photo} alt="person" />
+                                                </div>
+                                                <div className="ms-2">
+                                                    <h3 className="text-sm font-medium leading-5">
+                                                        {contact.name}
+                                                    </h3>
+
+                                                    <ul className="mt-1 flex text-xs font-normal leading-4 text-gray-500 justify-between">
+                                                        <li>{contact.email}</li>
+                                                        <li className=" justify-between ms-3">last seen </li>
+                                                    </ul>
+                                                </div>
+
+                                                <NavLink
+                                                    onClick={() => openChatWith(contact)}
+                                                    className={classNames(
+                                                        'absolute inset-0 rounded-md',
+                                                        'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2'
+                                                    )}
+                                                />
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </Tab.Panel>
+                            <Tab.Panel
+                                key="calls"
+                                className={classNames(
+                                    'rounded-xl bg-white p-3',
+                                    'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
+                                )}
+                            >
+                                <ul>
+                                    {calls.map((call) => (
+                                        <li
+                                            key={call._id}
+                                            className="relative rounded-md p-3 hover:bg-gray-300"
+                                        >
+                                            <div className=" flex flex-row">
+                                                <div className="w-12 h-12">
+                                                    <img className=" rounded-full" src={call.photo} alt="person" />
+                                                </div>
+                                                <div className="ms-2">
+                                                    <h3 className="text-sm font-medium leading-5">
+                                                        {call.name}
+                                                    </h3>
+
+                                                    <ul className="mt-1 flex text-xs font-normal leading-4 text-gray-500 justify-between">
+                                                        <li>{call.email}</li>
+                                                        <li className=" justify-between ms-3">last seen </li>
+                                                    </ul>
+                                                </div>
+
+                                                <NavLink
+                                                    onClick={() => openChatWith(call)}
                                                     className={classNames(
                                                         'absolute inset-0 rounded-md',
                                                         'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2'
