@@ -21,13 +21,15 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     photo: {
-      type: String
+      data: Buffer,
+      contentType: String,
     },
     bio: {
       type: String
     },
     coverPhoto: {
-      type: String
+      data: Buffer,
+      contentType: String,
     },
     contacts: [
       {

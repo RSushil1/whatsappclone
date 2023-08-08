@@ -4,43 +4,25 @@ import axios from 'axios'
 import { NavLink, useNavigate } from 'react-router-dom'
 
 const Signup = () => {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        password: '',
-        answer: '',
-        photo: '',
-    });
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [answer, setAnswer] = useState("");
+    const [photo, setPhoto] = useState("");
+
     const navigate = useNavigate()
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-
-        reader.onloadend = () => {
-            setFormData((prevData) => ({
-                ...prevData,
-                photo: reader.result, // Base64-encoded image data
-            }));
-        };
-
-        if (file) {
-            reader.readAsDataURL(file);
-        }
-    };
 
     // form function
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const formData = new FormData();
+            formData.append("name", name);
+            formData.append("email", email);
+            formData.append("password", password);
+            formData.append("answer", answer);
+            formData.append("photo", photo);
             const res = await axios.post('http://localhost:8000/api/auth/signup', formData);
 
             if (res.data.success) {
@@ -67,15 +49,15 @@ const Signup = () => {
                 <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
                     <form className="space-y-6" onSubmit={handleSubmit}>
                         <div>
-                            <label htmlFor="user_name" className="block text-sm font-medium leading-6 text-gray-900">
+                            <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
                                 Name
                             </label>
                             <div className="mt-2">
                                 <input
                                     type="text"
                                     name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
                                     required
                                     id="name"
                                     autoComplete="name"
@@ -84,15 +66,15 @@ const Signup = () => {
                             </div>
                         </div>
                         <div>
-                            <label htmlFor="user_name" className="block text-sm font-medium leading-6 text-gray-900">
+                            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                                 E-mail
                             </label>
                             <div className="mt-2">
                                 <input
                                     type="email"
                                     name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     id="email"
                                     autoComplete="email"
                                     required
@@ -117,8 +99,8 @@ const Signup = () => {
                                 <input
                                     type="password"
                                     name="password"
-                                    value={formData.password}
-                                    onChange={handleChange}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                     id="password"
                                     autoComplete="current-password"
                                     required
@@ -127,15 +109,15 @@ const Signup = () => {
                             </div>
                         </div>
                         <div>
-                            <label htmlFor="user_name" className="block text-sm font-medium leading-6 text-gray-900">
+                            <label htmlFor="answer" className="block text-sm font-medium leading-6 text-gray-900">
                                 What is your Fav Colour?
                             </label>
                             <div className="mt-2">
                                 <input
                                     type="text"
                                     name="answer"
-                                    value={formData.answer}
-                                    onChange={handleChange}
+                                    value={answer}
+                                    onChange={(e) => setAnswer(e.target.value)}
                                     id="answer"
                                     autoComplete="answer"
                                     required
@@ -146,11 +128,11 @@ const Signup = () => {
                         <div className=' flex flex-row'>
                             <div className="m-3">
                                 <label className="btn btn-outline-secondary col-md-12">
-                                    {formData.photo ? formData.photo.name : "Upload Photo"}
+                                    {photo ? photo.name : "Upload Photo"}
                                     <input
                                         type="file"
                                         accept="image/*"
-                                        onChange={handleFileChange}
+                                        onChange={(e) => setPhoto(e.target.files[0])}
                                         required
                                         name="photo"
                                         hidden
@@ -158,10 +140,10 @@ const Signup = () => {
                                 </label>
                             </div>
                             <div className="m-3">
-                                {formData.photo && (
+                                {photo && (
                                     <div className="text-center">
                                         <img
-                                            src={formData.photo}
+                                            src={URL.createObjectURL(photo)}
                                             alt="user_photo"
                                             className='h-32 w-32 rounded-full'
                                         />

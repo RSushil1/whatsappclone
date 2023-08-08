@@ -3,11 +3,12 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import { ChevronUpIcon } from '@heroicons/react/20/solid'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { UseAuth } from '../context/Auth';
 
 export default function ProfileButton(props) {
+  const [auth] = UseAuth();
     const name = props.name
     const id = props.id
-    const photo = props.photo
     const navigate = useNavigate();
     
 
@@ -30,7 +31,7 @@ export default function ProfileButton(props) {
         <div>
           <Menu.Button className="h-[9vh] px-3 inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 py-1 text-sm font-medium text-white hover:bg-opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
           <div className="flex flex-row">
-                    <div ><img className="w-10 h-10 rounded-full" src={photo} alt="profile" /></div>
+                    <div ><img className="w-10 h-10 rounded-full" src={`http://localhost:8000/api/auth/profile-photo/${auth?.user?._id}`} alt="profile" /></div>
                     <div className='ms-3'>Welcome: {name} <br /> ID: {id}</div>
                 </div>
             <ChevronUpIcon

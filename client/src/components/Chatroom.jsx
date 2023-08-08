@@ -69,7 +69,7 @@ const Chatroom = (props) => {
                             <button className='ms-5 h-10 w-10'><FiPhoneCall className=' h-6 w-6' /></button>
                         </div>
                     </div >
-                    <div className='h-[80vh] z-10 p-5 overflow-y-scroll align-text-bottom'>
+                    <div className='h-[80vh] z-10 p-5 overflow-y-auto align-text-bottom'>
                        
                            {
 

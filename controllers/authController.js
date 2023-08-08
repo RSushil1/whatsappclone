@@ -2,14 +2,14 @@ import userModel from "../models/userModel.js";
 
 import { comparePassword, hashPassword } from "./../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
-
+import fs from "fs";
 
 
 // register user by signup
 export const registerController = async (req, res) => {
   try {
-    const { name, email, password, answer,photo } = req.body;
-
+    const { name,email,password,answer } = req.fields;
+    const { photo } = req.files;
     //validations
     if (!name) {
       return res.send({ error: "Name is Required" });
@@ -34,15 +34,17 @@ export const registerController = async (req, res) => {
     }
     //register user
     const hashedPassword = await hashPassword(password);
-    //save
-    const user = await new userModel({
+
+    const user = new userModel({
       name,
       email,
       password: hashedPassword,
       answer,
-      photo,
-      
     });
+    if (photo) {
+      user.photo.data = fs.readFileSync(photo.path);
+      user.photo.contentType = photo.type;
+    }
     await user.save();
 
     res.status(201).send({
@@ -102,7 +104,6 @@ export const loginController = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
-        photo: user.photo,
       },
       token,
     });
@@ -156,12 +157,15 @@ export const forgotPasswordController = async (req, res) => {
 // get Profile
 export const getProfileController = async (req, res) => {
   try {
-    const profile = await userModel.findById(req.user._id);
+    const profile = await userModel.findById(req.user._id)
+                                   .select("-photo")
+                                   .select("-coverPhoto")
+                                   .select("-chats");
     res.json(profile);
   } catch (error) {
     res.status(500).send({
       success: false,
-      message: "Error WHile Geting profile",
+      message: "Error While Geting profile",
       error,
     });
   }
@@ -170,23 +174,29 @@ export const getProfileController = async (req, res) => {
 //update profile
 export const updateProfileController = async (req, res) => {
   try {
-    const { name,bio,photo,coverPhoto} = req.body;
+    const { name,password,bio } = req.fields;
+    const { photo,coverPhoto } = req.files;
     const user = await userModel.findById(req.user._id);
     
-    // const hashedPassword = password ? await hashPassword(password) : undefined;
+    const hashedPassword = password ? await hashPassword(password) : undefined;
     const updatedUser = await userModel.findByIdAndUpdate(
       user._id,
       {
         name: name || user.name,
         bio: bio || user.bio,
-        photo: photo || user.photo,
-        coverPhoto: coverPhoto || user.coverPhoto,
-        
-        // password: hashedPassword || user.password,
+        password: hashedPassword || user.password, 
       },
       { new: true }
     );
-    await user.save();
+    if (photo) {
+      updatedUser.photo.data = fs.readFileSync(photo.path) || user.photo;
+      updatedUser.photo.contentType = photo.type || user.photo.type;
+    }
+    if (coverPhoto) {
+      updatedUser.coverPhoto.data = fs.readFileSync(coverPhoto.path) || user.coverPhoto;
+      updatedUser.coverPhoto.contentType = coverPhoto.type || user.coverPhoto.type;
+    }
+    await updatedUser.save();
     res.status(200).send({
       success: true,
       message: "Profile Updated SUccessfully",
@@ -246,6 +256,40 @@ export const getContacts = async (req, res) => {
     res.status(500).send({
       success: false,
       message: "Error WHile Geting contacts",
+      error,
+    });
+  }
+};
+
+// get photo
+export const profilePhotoController = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.params.uid).select("photo");
+    if (user.photo.data) {
+      res.set("Content-type", user.photo.contentType);
+      return res.status(200).send(user.photo.data);
+    }
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Erorr while getting photo",
+      error,
+    });
+  }
+};
+
+// get coverPhoto
+export const profileCoverPhotoController = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.params.uid).select("coverPhoto");
+    if (user.coverPhoto.data) {
+      res.set("Content-type", user.coverPhoto.contentType);
+      return res.status(200).send(user.coverPhoto.data);
+    }
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Erorr while getting coverPhoto",
       error,
     });
   }

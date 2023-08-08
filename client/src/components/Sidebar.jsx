@@ -142,7 +142,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                                         >
                                             <div className=" flex flex-row">
                                                 <div className="w-12 h-12">
-                                                    <img className=" rounded-full" src={contact.photo} alt="person" />
+                                                    <img className="w-12 h-12 rounded-full" src={contact.photo} alt="person" />
                                                 </div>
                                                 <div className="ms-2">
                                                     <h3 className="text-sm font-medium leading-5">
@@ -211,7 +211,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                 </Tab.Group>
             </div>
             <div className='flex flex-row justify-between text-white font-semibold p-1 bg-blue-900 z-10 h-[10vh]'>
-                <ProfileButton name={auth?.user?.name} id={auth?.user?.email} photo={auth?.user?.photo} openProfile={openProfile} />
+                <ProfileButton name={auth?.user?.name} id={auth?.user?.email} openProfile={openProfile} />
                 <div>
                     <AddContactModal />
                 </div>
