@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState } from 'react'
 import Sidebar from '../components/Sidebar'
 import Chatroom from '../components/Chatroom'
 import Profile from '../components/Profile';
@@ -15,6 +15,7 @@ const Dashboard = () => {
   const viewProfile = (data) => {
     setProfile(data);
   };
+
   return (
    <>
    <SocketProvider>

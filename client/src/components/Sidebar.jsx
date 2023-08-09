@@ -142,7 +142,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                                         >
                                             <div className=" flex flex-row">
                                                 <div className="w-12 h-12">
-                                                    <img className="w-12 h-12 rounded-full" src={contact.photo} alt="person" />
+                                                    <img className="w-12 h-12 rounded-full" src={`http://localhost:8000/api/auth/profile-photo/${contact._id}`} alt="person" />
                                                 </div>
                                                 <div className="ms-2">
                                                     <h3 className="text-sm font-medium leading-5">

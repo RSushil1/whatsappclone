@@ -160,7 +160,8 @@ export const getProfileController = async (req, res) => {
     const profile = await userModel.findById(req.user._id)
                                    .select("-photo")
                                    .select("-coverPhoto")
-                                   .select("-chats");
+                                   .select("-chats")
+                                   .select("-password");
     res.json(profile);
   } catch (error) {
     res.status(500).send({
@@ -200,6 +201,7 @@ export const updateProfileController = async (req, res) => {
     res.status(200).send({
       success: true,
       message: "Profile Updated SUccessfully",
+      updatedUser
     });
   } catch (error) {
     res.status(400).send({
@@ -217,26 +219,25 @@ export const updateContacts = async (req, res) => {
     const user = await userModel.findById(req.user._id);
 
     const adduser = await userModel.findOne({ email });
-    const id = adduser._id;
-    console.log(id)
-
+    
     if (!adduser) {
-      return res.status(404).json({ message: "contact not found" });
+      return res.status(200).json({ success: "false", message: "contact not found" });
     }
+    const id = adduser._id;
     // Add the contact to the user's contacts list
     user.contacts.push(id);
     await user.save();
 
     res.status(200).send({
-      success: true,
+      success: "true",
       message: "Contacts added successfully",
       user
     });
   } catch (error) {
-    res.status(400).send({
-      success: false,
-      message: "Error WHile Update profile",
-      error,
+    res.status(200).send({
+      success: "false",
+      message: "Error WHile Updating contacts",
+      error: error.message,
     });
   }
 };

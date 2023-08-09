@@ -21,7 +21,7 @@ export default function ProfileButton(props) {
 
     const handleLogout = ()=>{
       localStorage.setItem('whatsapp','');
-      toast("Logout successfully")
+      toast.success("Logout successfully")
       navigate('/')
     }
 

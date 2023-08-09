@@ -16,18 +16,19 @@ export default function AddContactModal() {
       const res = await axios.post("http://localhost:8000/api/auth/contacts", {
         email
       });
-      if (res.data.success) {
+      if (res.data.success === "true") {
         setAuth({
           ...auth,
           user: res.data.user,
         });
         localStorage.setItem("whatsapp", JSON.stringify(auth));
         toast.success(res.data.message);
-      }else {
+        setEmail("")
+      }else if(res.data.success === "false") {
         toast.error(res.data.message);
       }
     } catch (error) {
-      toast.error("Server Issue");
+      toast.error("server error");
     }
   };
 

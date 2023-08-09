@@ -3,7 +3,6 @@ import { Fragment, useEffect, useState } from 'react'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import { toast } from 'react-toastify'
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { UseAuth } from '../../context/Auth';
 
 export default function UpdateProfileModal() {
@@ -12,9 +11,9 @@ export default function UpdateProfileModal() {
     const [password, setPassword] = useState("");
     const [photo, setPhoto] = useState("");
     const [coverPhoto, setCoverPhoto] = useState("");
+    const [auth, setAuth] = UseAuth();
 
     let [isOpen, setIsOpen] = useState(false)
-    const navigate = useNavigate()
 
     function closeModal() {
         setIsOpen(false)
@@ -37,8 +36,12 @@ export default function UpdateProfileModal() {
             const res = await axios.put('http://localhost:8000/api/auth/profile', formData);
 
             if (res.data.success) {
+                setAuth({
+                    ...auth,
+                    user: res.data.user,
+                  });
+                  localStorage.setItem("whatsapp", JSON.stringify(auth));
                 toast.success(res.data.message);
-                navigate("/chatroom/user");
             } else {
                 toast.error(res.data.message);
             }
@@ -46,10 +49,6 @@ export default function UpdateProfileModal() {
             toast.error('Something Went Wrong!');
         }
     };
-
-    // useEffect(()=>{
-
-    // })
 
 
     return (
