@@ -6,8 +6,9 @@ import { UseAuth } from '../context/Auth';
 
 export default function AddContactModal() {
   const [email, setEmail] = useState();
-  const [auth,setAuth]= UseAuth();
+  const [auth, setAuth] = UseAuth();
   let [isOpen, setIsOpen] = useState(false);
+
 
   // form submit
   const handleSubmit = async (e) => {
@@ -16,15 +17,18 @@ export default function AddContactModal() {
       const res = await axios.post("http://localhost:8000/api/auth/contacts", {
         email
       });
-      if (res.data.success === "true") {
+      if (res.data.success) {
+        toast.success(res.data.message);
+        const updatedContacts = [...auth.user.contacts, res.data.contacts];
         setAuth({
           ...auth,
-          user: res.data.user,
-        });
-        localStorage.setItem("whatsapp", JSON.stringify(auth));
-        toast.success(res.data.message);
+          user: {
+            ...auth.user,
+            contacts: updatedContacts
+          }})
+        // localStorage.setItem("whatsapp", JSON.stringify(auth));
         setEmail("")
-      }else if(res.data.success === "false") {
+      }else{
         toast.error(res.data.message);
       }
     } catch (error) {

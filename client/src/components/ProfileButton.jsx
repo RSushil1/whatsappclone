@@ -15,7 +15,6 @@ export default function ProfileButton(props) {
     const handleViewProfile = (data)=>{
       const dataToSend = data;
       props.openProfile(dataToSend);
-      console.log(dataToSend)
 
     }
 

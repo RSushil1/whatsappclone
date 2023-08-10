@@ -32,7 +32,7 @@ export default function Login() {
         toast.error(res.data.message);
       }
     } catch (error) {
-      toast.error("Something Went Wrong!");
+      toast.error("Something Went Wrong!,server Issue");
     }
   };
 

@@ -104,6 +104,7 @@ export const loginController = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        contacts: user.contacts
       },
       token,
     });
@@ -158,10 +159,11 @@ export const forgotPasswordController = async (req, res) => {
 export const getProfileController = async (req, res) => {
   try {
     const profile = await userModel.findById(req.user._id)
-                                   .select("-photo")
-                                   .select("-coverPhoto")
-                                   .select("-chats")
-                                   .select("-password");
+                                   .select("id")
+                                   .select("name")
+                                   .select("email")
+                                   .select("bio")
+                                   .select("contacts");
     res.json(profile);
   } catch (error) {
     res.status(500).send({
@@ -200,13 +202,13 @@ export const updateProfileController = async (req, res) => {
     await updatedUser.save();
     res.status(200).send({
       success: true,
-      message: "Profile Updated SUccessfully",
+      message: "Profile Updated Successfully",
       updatedUser
     });
   } catch (error) {
     res.status(400).send({
       success: false,
-      message: "Error WHile Update profile",
+      message: "Error WHile Updating profile",
       error,
     });
   }
@@ -221,22 +223,23 @@ export const updateContacts = async (req, res) => {
     const adduser = await userModel.findOne({ email });
     
     if (!adduser) {
-      return res.status(200).json({ success: "false", message: "contact not found" });
+      return res.status(200).json({ success: false, message: "contact not found" });
     }
     const id = adduser._id;
     // Add the contact to the user's contacts list
     user.contacts.push(id);
     await user.save();
+    const contacts = await userModel.findById(user._id).select("contacts");
 
     res.status(200).send({
-      success: "true",
+      success: true,
       message: "Contacts added successfully",
-      user
+      contacts
     });
   } catch (error) {
     res.status(200).send({
       success: "false",
-      message: "Error WHile Updating contacts",
+      message: "Error While Updating contacts",
       error: error.message,
     });
   }
@@ -251,7 +254,7 @@ export const getContacts = async (req, res) => {
     const contactIds = user.contacts;
 
     // Find all contacts based on their _ids
-    const contacts = await userModel.find({ _id: { $in: contactIds } });
+    const contacts = await userModel.find({ _id: { $in: contactIds } }).select("_id").select("name").select("email");
     res.json(contacts);
   } catch (error) {
     res.status(500).send({

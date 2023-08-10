@@ -5,14 +5,13 @@ import { toast } from 'react-toastify'
 import axios from 'axios';
 import { UseAuth } from '../../context/Auth';
 
-export default function UpdateProfileModal() {
+export default function UpdateProfileModal(props) {
     const [name, setName] = useState("");
     const [bio, setBio] = useState("");
     const [password, setPassword] = useState("");
     const [photo, setPhoto] = useState("");
     const [coverPhoto, setCoverPhoto] = useState("");
     const [auth, setAuth] = UseAuth();
-
     let [isOpen, setIsOpen] = useState(false)
 
     function closeModal() {
@@ -36,12 +35,13 @@ export default function UpdateProfileModal() {
             const res = await axios.put('http://localhost:8000/api/auth/profile', formData);
 
             if (res.data.success) {
+                toast.success(res.data.message);
                 setAuth({
                     ...auth,
-                    user: res.data.user,
+                    user: res.data.updatedUser,
                   });
                   localStorage.setItem("whatsapp", JSON.stringify(auth));
-                toast.success(res.data.message);
+                  props.onUpdate();
             } else {
                 toast.error(res.data.message);
             }
@@ -49,6 +49,7 @@ export default function UpdateProfileModal() {
             toast.error('Something Went Wrong!');
         }
     };
+ 
 
 
     return (

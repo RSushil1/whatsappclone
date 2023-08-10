@@ -6,7 +6,8 @@ import { UseAuth } from '../context/Auth';
 
 const Profile = () => {
   const [profile, setProfile] = useState("");
-  const [auth, setAuth] = UseAuth()
+  const [auth, setAuth] = UseAuth();
+  const [imageKey, setImageKey] = useState(0);
 
   const getProfile = async () => {
     try {
@@ -14,7 +15,7 @@ const Profile = () => {
       setProfile(res.data);
       localStorage.setItem("whatsapp", JSON.stringify({...auth,
         user: res.data}));
-      
+        setImageKey(imageKey + 1);
     } catch (error) {
       toast.error("Server not responded, contact to service provider");
     }
@@ -22,16 +23,20 @@ const Profile = () => {
   
   useEffect(() => {
     getProfile();
-  }, [auth])
+  }, [auth]);
+
+  const handleUpdate = ()=>{
+    setImageKey(imageKey + 1);
+  }
 
   return (
     <div>
       <div className='h-[90vh] m-5 justify-center shadow-2xl bg-white rounded-lg p-3 overflow-y-auto'>
 
-        <div><img className='rounded-lg w-full bg-blue-500 h-[30vh]' src={`http://localhost:8000/api/auth/profile-coverPhoto/${auth?.user?._id || profile._id}`} alt={auth?.user?.name} /></div>
+        <div><img className='rounded-lg w-full bg-blue-500 h-[30vh]'  key={imageKey} src={`http://localhost:8000/api/auth/profile-coverPhoto/${auth?.user?._id || profile._id}`} alt={auth?.user?.name} /></div>
         <div className='flex flex-row m-3'>
-        <div className='w-[20%]'><img className='h-32 w-32 rounded-full' src={`http://localhost:8000/api/auth/profile-photo/${auth?.user?._id || profile._id}`} alt={auth?.user?.name} />
-        <UpdateProfileModal/></div>
+        <div className='w-[20%]'><img className='h-32 w-32 rounded-full'  key={`profilePhoto-${auth?.user?._id || profile._id}-${imageKey}`} src={`http://localhost:8000/api/auth/profile-photo/${auth?.user?._id || profile._id}`} alt={auth?.user?.name} />
+        <UpdateProfileModal onUpdate={handleUpdate}/></div>
 
         <div className='w-[80%]'>
           <div className="px-4 sm:px-0">

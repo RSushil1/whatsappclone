@@ -26,7 +26,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
         getContacts();
     }, [auth])
 
-    
+
 
 
     const openChatWith = (person) => {
@@ -87,126 +87,132 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
 
                     </Tab.List>
                     <Tab.Panels className="mt-2">
-                            <Tab.Panel
-                                key="chats"
-                                className={classNames(
-                                    'rounded-xl bg-white p-3',
-                                    'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
-                                )}
-                            >
-                                <ul>
-                                    {chats.map((chat) => (
-                                        <li
-                                            key={chat._id}
-                                            className="relative rounded-md p-3 hover:bg-gray-300"
-                                        >
-                                            <div className=" flex flex-row">
-                                                <div className="w-12 h-12">
-                                                    <img className=" rounded-full" src={chat.photo} alt="person" />
-                                                </div>
-                                                <div className="ms-2">
-                                                    <h3 className="text-sm font-medium leading-5">
-                                                        {chat.name}
-                                                    </h3>
-
-                                                    <ul className="mt-1 flex text-xs font-normal leading-4 text-gray-500 justify-between">
-                                                        <li>{chat.email}</li>
-                                                        <li className=" justify-between ms-3">last seen </li>
-                                                    </ul>
-                                                </div>
-
-                                                <NavLink
-                                                    onClick={() => openChatWith(chat)}
-                                                    className={classNames(
-                                                        'absolute inset-0 rounded-md',
-                                                        'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2'
-                                                    )}
-                                                />
+                        <Tab.Panel
+                            key="chats"
+                            className={classNames(
+                                'rounded-xl bg-white p-3',
+                                'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
+                            )}
+                        >
+                            <ul>
+                                {chats.map((chat) => (
+                                    <li
+                                        key={chat._id}
+                                        className="relative rounded-md p-3 hover:bg-gray-300"
+                                    >
+                                        <div className=" flex flex-row">
+                                            <div className="w-12 h-12">
+                                                <img className=" rounded-full" src={chat.photo} alt="person" />
                                             </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </Tab.Panel>
-                            <Tab.Panel
-                                key="contacts"
-                                className={classNames(
-                                    'rounded-xl bg-white p-3',
-                                    'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
-                                )}
-                            >
-                                <ul>
-                                    {contacts.map((contact) => (
-                                        <li
-                                            key={contact._id}
-                                            className="relative rounded-md p-3 hover:bg-gray-300"
-                                        >
-                                            <div className=" flex flex-row">
-                                                <div className="w-12 h-12">
-                                                    <img className="w-12 h-12 rounded-full" src={`http://localhost:8000/api/auth/profile-photo/${contact._id}`} alt="person" />
-                                                </div>
-                                                <div className="ms-2">
-                                                    <h3 className="text-sm font-medium leading-5">
-                                                        {contact.name}
-                                                    </h3>
+                                            <div className="ms-2">
+                                                <h3 className="text-sm font-medium leading-5">
+                                                    {chat.name}
+                                                </h3>
 
-                                                    <ul className="mt-1 flex text-xs font-normal leading-4 text-gray-500 justify-between">
-                                                        <li>{contact.email}</li>
-                                                        <li className=" justify-between ms-3">last seen </li>
-                                                    </ul>
-                                                </div>
-
-                                                <NavLink
-                                                    onClick={() => openChatWith(contact)}
-                                                    className={classNames(
-                                                        'absolute inset-0 rounded-md',
-                                                        'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2'
-                                                    )}
-                                                />
+                                                <ul className="mt-1 flex text-xs font-normal leading-4 text-gray-500 justify-between">
+                                                    <li>{chat.email}</li>
+                                                    <li className=" justify-between ms-3">last seen </li>
+                                                </ul>
                                             </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </Tab.Panel>
-                            <Tab.Panel
-                                key="calls"
-                                className={classNames(
-                                    'rounded-xl bg-white p-3',
-                                    'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
-                                )}
-                            >
-                                <ul>
-                                    {calls.map((call) => (
-                                        <li
-                                            key={call._id}
-                                            className="relative rounded-md p-3 hover:bg-gray-300"
-                                        >
-                                            <div className=" flex flex-row">
-                                                <div className="w-12 h-12">
-                                                    <img className=" rounded-full" src={call.photo} alt="person" />
-                                                </div>
-                                                <div className="ms-2">
-                                                    <h3 className="text-sm font-medium leading-5">
-                                                        {call.name}
-                                                    </h3>
 
-                                                    <ul className="mt-1 flex text-xs font-normal leading-4 text-gray-500 justify-between">
-                                                        <li>{call.email}</li>
-                                                        <li className=" justify-between ms-3">last seen </li>
-                                                    </ul>
-                                                </div>
-
-                                                <NavLink
-                                                    onClick={() => openChatWith(call)}
-                                                    className={classNames(
-                                                        'absolute inset-0 rounded-md',
-                                                        'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2'
-                                                    )}
-                                                />
+                                            <NavLink
+                                                onClick={() => openChatWith(chat)}
+                                                className={classNames(
+                                                    'absolute inset-0 rounded-md',
+                                                    'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2'
+                                                )}
+                                            />
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </Tab.Panel>
+                        <Tab.Panel
+                            key="contacts"
+                            className={classNames(
+                                'rounded-xl bg-white p-3',
+                                'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
+                            )}
+                        >
+                            <ul>
+                                {contacts.map((contact) => (
+                                    <li
+                                        key={contact._id}
+                                        className="relative rounded-md p-3 hover:bg-gray-300"
+                                    >
+                                        <div className=" flex flex-row">
+                                            <div className="w-12 h-12">
+                                                <img className="w-12 h-12 rounded-full" src={`http://localhost:8000/api/auth/profile-photo/${contact._id}`} alt="person" />
                                             </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </Tab.Panel>
+                                            <div className="ms-2">
+                                                <h3 className="text-sm font-medium leading-5">
+                                                    {contact.name}
+                                                </h3>
+
+                                                <ul className="mt-1 flex text-xs font-normal leading-4 text-gray-500 justify-between">
+                                                    <li>{contact.email}</li>
+
+                                                </ul>
+                                            </div>
+                                            <div className="ms-2 inset-0"><input
+                                                id="addToChat"
+                                                name="ddToChat"
+                                                type="checkbox"
+                                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                            /></div>
+
+                                            <NavLink
+                                                onClick={() => openChatWith(contact)}
+                                                className={classNames(
+                                                    'absolute inset-0 rounded-md',
+                                                    'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2'
+                                                )}
+                                            />
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </Tab.Panel>
+                        <Tab.Panel
+                            key="calls"
+                            className={classNames(
+                                'rounded-xl bg-white p-3',
+                                'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
+                            )}
+                        >
+                            <ul>
+                                {calls.map((call) => (
+                                    <li
+                                        key={call._id}
+                                        className="relative rounded-md p-3 hover:bg-gray-300"
+                                    >
+                                        <div className=" flex flex-row">
+                                            <div className="w-12 h-12">
+                                                <img className=" rounded-full" src={call.photo} alt="person" />
+                                            </div>
+                                            <div className="ms-2">
+                                                <h3 className="text-sm font-medium leading-5">
+                                                    {call.name}
+                                                </h3>
+
+                                                <ul className="mt-1 flex text-xs font-normal leading-4 text-gray-500 justify-between">
+                                                    <li>{call.email}</li>
+                                                    <li className=" justify-between ms-3">last seen </li>
+                                                </ul>
+                                            </div>
+
+                                            <NavLink
+                                                onClick={() => openChatWith(call)}
+                                                className={classNames(
+                                                    'absolute inset-0 rounded-md',
+                                                    'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2'
+                                                )}
+                                            />
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </Tab.Panel>
                     </Tab.Panels>
                 </Tab.Group>
             </div>
