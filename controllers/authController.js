@@ -157,13 +157,13 @@ export const forgotPasswordController = async (req, res) => {
 
 // get Profile
 export const getProfileController = async (req, res) => {
+  const _id = req.params.uid;
   try {
-    const profile = await userModel.findById(req.user._id)
+    const profile = await userModel.findById(_id)
                                    .select("id")
                                    .select("name")
                                    .select("email")
-                                   .select("bio")
-                                   .select("contacts");
+                                   .select("bio");                               
     res.json(profile);
   } catch (error) {
     res.status(500).send({

@@ -2,9 +2,11 @@ import { UseAuth } from "../context/Auth"
 import { useEffect, useState } from 'react'
 import { Tab } from '@headlessui/react'
 import { NavLink } from "react-router-dom"
-import AddContactModal from './AddContactModal';
-import ProfileButton from './ProfileButton';
+import AddContactModal from './form/AddContactModal';
+import ProfileButton from './microComponets/ProfileButton';
 import axios from "axios";
+import ThreeDotView from "./microComponets/ThreedotView";
+
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -15,6 +17,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
     const [contacts, setContacts] = useState([]);
     const [calls, setCalls] = useState([]);
     const [chats, setChats] = useState([]);
+    const [selectedContacts, setSelectedContacts] = useState([]);
     // const [chatWith, setChatWith] = useState("");
 
     const getContacts = async () => {
@@ -27,6 +30,33 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
     }, [auth])
 
 
+
+
+    const handleCheckboxChange = (contactId) => {
+        setSelectedContacts((prevSelected) => {
+            if (prevSelected.includes(contactId)) {
+                return prevSelected.filter((id) => id !== contactId);
+            } else {
+                return [...prevSelected, contactId];
+            }
+        });
+    };
+
+    const [showAddToChatButton, setShowAddToChatButton] = useState(false);
+    const [showMakeGroupButton, setShowMakeGroupButton] = useState(false);
+
+    useEffect(() => {
+        if (selectedContacts.length === 1) {
+            setShowAddToChatButton(true);
+            setShowMakeGroupButton(false);
+        } else if (selectedContacts.length > 1) {
+            setShowAddToChatButton(false);
+            setShowMakeGroupButton(true);
+        } else {
+            setShowAddToChatButton(false);
+            setShowMakeGroupButton(false);
+        }
+    }, [selectedContacts]);
 
 
     const openChatWith = (person) => {
@@ -130,21 +160,22 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                         <Tab.Panel
                             key="contacts"
                             className={classNames(
-                                'rounded-xl bg-white p-3',
+                                'rounded-xl bg-white p-3 mb-20',
                                 'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
                             )}
                         >
-                            <ul>
+                            <ul className=" relative">
                                 {contacts.map((contact) => (
                                     <li
                                         key={contact._id}
                                         className="relative rounded-md p-3 hover:bg-gray-300"
+                                        onClick={() => handleCheckboxChange(contact._id)}
                                     >
                                         <div className=" flex flex-row">
-                                            <div className="w-12 h-12">
+                                            <div className="w-[25%] h-12">
                                                 <img className="w-12 h-12 rounded-full" src={`http://localhost:8000/api/auth/profile-photo/${contact._id}`} alt="person" />
                                             </div>
-                                            <div className="ms-2">
+                                            <div className="ms-2 w-[55%]">
                                                 <h3 className="text-sm font-medium leading-5">
                                                     {contact.name}
                                                 </h3>
@@ -154,15 +185,22 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
 
                                                 </ul>
                                             </div>
-                                            <div className="ms-2 inset-0"><input
-                                                id="addToChat"
-                                                name="ddToChat"
-                                                type="checkbox"
-                                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                                            /></div>
+                                            <div className="ms-2 w-[10%]">
+                                                <input
+                                                    id={`addToChat-${contact._id}`}
+                                                    name={`addToChat-${contact._id}`}
+                                                    type="checkbox"
+                                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                    checked={selectedContacts.includes(contact._id)}
+                                                    onChange={() => handleCheckboxChange(contact._id)}
+                                                />
+                                            </div>
+                                            <div className="w-[10%] z-10">
+                                                <ThreeDotView id={contact._id} openProfile={openProfile} />
+                                            </div>
 
                                             <NavLink
-                                                onClick={() => openChatWith(contact)}
+
                                                 className={classNames(
                                                     'absolute inset-0 rounded-md',
                                                     'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2'
@@ -172,6 +210,12 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                                     </li>
                                 ))}
                             </ul>
+                            <div className=" absolute -translate-y-52 translate-x-32">{showAddToChatButton && (
+                                <button className="text-white bg-blue-600 rounded-md shadow-xl p-2 mr-2">Add to Chat</button>
+                            )}
+                                {showMakeGroupButton && (
+                                    <button className="text-white bg-green-600 rounded-md shadow-xl p-2">Make Group with {selectedContacts.length}</button>
+                                )}</div>
                         </Tab.Panel>
                         <Tab.Panel
                             key="calls"
@@ -217,7 +261,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                 </Tab.Group>
             </div>
             <div className='flex flex-row justify-between text-white font-semibold p-1 bg-blue-900 z-10 h-[10vh]'>
-                <ProfileButton name={auth?.user?.name} id={auth?.user?.email} openProfile={openProfile} />
+                <ProfileButton name={auth?.user?.name} email={auth?.user?.email} id={auth?.user?._id} openProfile={openProfile} />
                 <div>
                     <AddContactModal />
                 </div>

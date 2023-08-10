@@ -41,7 +41,7 @@ router.get("/user-auth", requireSignIn, (req, res) => {
 });
 
 //get profile
-router.get("/profile", requireSignIn, getProfileController);
+router.get("/profile/:uid", getProfileController);
 
 //update profile
 router.put("/profile", requireSignIn,formidable(), updateProfileController);

@@ -37,30 +37,6 @@ const userSchema = new mongoose.Schema(
         ref: "users",
       },
     ],
-    chats: [
-      {
-        withUser: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "users",
-        },
-        messages: [
-          {
-            sender: {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: "users",
-            },
-            content: {
-              type: String,
-              required: true,
-            },
-            timestamp: {
-              type: Date,
-              default: Date.now,
-            },
-          },
-        ],
-      },
-    ],
   },
   { timestamps: true }
 );

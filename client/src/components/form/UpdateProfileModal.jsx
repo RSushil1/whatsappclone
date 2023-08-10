@@ -1,11 +1,11 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useState } from 'react'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import { toast } from 'react-toastify'
 import axios from 'axios';
 import { UseAuth } from '../../context/Auth';
 
-export default function UpdateProfileModal(props) {
+export default function UpdateProfileModal() {
     const [name, setName] = useState("");
     const [bio, setBio] = useState("");
     const [password, setPassword] = useState("");
@@ -41,7 +41,6 @@ export default function UpdateProfileModal(props) {
                     user: res.data.updatedUser,
                   });
                   localStorage.setItem("whatsapp", JSON.stringify(auth));
-                  props.onUpdate();
             } else {
                 toast.error(res.data.message);
             }
@@ -55,12 +54,11 @@ export default function UpdateProfileModal(props) {
     return (
         <>
             <div className="inset-0 flex items-center justify-center">
-                <svg type="button"
-                    onClick={openModal} className='h-10 w-10 m-5' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" id="edit"><path fill="#A35BB4" d="M88 2H12C6.477 2 2 6.477 2 12v76c0 5.523 4.477 10 10 10h76c5.523 0 10-4.477 10-10V12c0-5.523-4.477-10-10-10z"></path><path fill="#76418F" d="M47.891 34.405c-.29-.29-.74-.37-1.12-.2l-11.7 5.24c-.28.13-.48.37-.56.66l-1.86 7.18-4.97-4.97a.987.987 0 0 0-.68-.27c-.55 0-1 .45-1 1l.01 28.16v1.29L51.508 98H88c5.523 0 10-4.477 10-10v-3.476l-32.359-32.36-17.75-17.76zM55.961 26.335c-.39-.39-1.03-.39-1.42 0l-6.08 6.08L98 81.954v-13.57l-24.289-24.29-17.75-17.76z"></path><path fill="#FFF" d="m73.709 44.096-17.75-17.76c-.39-.39-1.03-.39-1.42 0l-6.079 6.079c.31.146.6.334.843.577l17.75 17.76c.247.24.44.521.585.825l6.07-6.07a.996.996 0 0 0 0-1.41zM47.889 34.406c-.29-.29-.74-.37-1.12-.2l-11.7 5.24c-.28.13-.48.37-.56.66l-6.5 25.1-.01-22.16c0-.55-.45-1-1-1s-1 .45-1 1l.01 28.16v1.29h.11l1.89-1.89 12.17-12.16c-.64-.92-.99-2.01-.99-3.16a5.5 5.5 0 0 1 1.64-3.93 5.513 5.513 0 0 1 3.93-1.63c1.49 0 2.88.58 3.94 1.63a5.53 5.53 0 0 1 1.63 3.93c0 1.49-.58 2.89-1.63 3.94a5.554 5.554 0 0 1-3.94 1.63c-1.15 0-2.24-.35-3.16-1l-13.76 13.75-.27.27-.08.08 32.45-8.42c.29-.07.54-.28.66-.56l5.25-11.7c.17-.38.09-.82-.21-1.11l-17.75-17.76z"></path></svg>
+               <button onClick={openModal }>Update Profile</button>
             </div>
 
             <Transition appear show={isOpen} as={Fragment}>
-                <Dialog as="div" className="relative z-10 w-5" onClose={closeModal}>
+                <Dialog as="div" className="relative z-30 w-5" onClose={closeModal}>
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"
