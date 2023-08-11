@@ -54,9 +54,6 @@ router.post("/contacts", requireSignIn, updateContactsController);
 //get contacts
 router.get("/contacts", requireSignIn, getContactsController);
 
-//get chats
-router.get("/chats", requireSignIn, getChatsController);
-
 //get profile-photo
 router.get("/profile-photo/:uid", profilePhotoController);
 
@@ -65,6 +62,9 @@ router.get("/profile-coverPhoto/:uid", profileCoverPhotoController);
 
 // add chat
 router.post("/chats", requireSignIn, updateChatsController);
+
+//get chats
+router.get("/chats", requireSignIn, getChatsController);
 
 
 export default router;

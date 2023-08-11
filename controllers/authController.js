@@ -264,24 +264,33 @@ export const getContactsController = async (req, res) => {
     });
   }
 };
-// get contacts
+// get chats
 export const getChatsController = async (req, res) => {
   try {
-    const user = await userModel.findById(req.user._id);
-    //Get the list of contact _ids from the user object
-    const contactIds = user.contacts;
+    const chats = await chatModel.find({ withUsers: { $in: [req.user._id] } });
 
-    // Find all contacts based on their _ids
-    const contacts = await userModel.find({ _id: { $in: contactIds } }).select("_id").select("name").select("email");
-    res.json(contacts);
+    const formattedChats = chats.map(chat => {
+      // const otherUsers = chat.withUsers.filter(userId => userId !== req.user._id);
+      if (chat.withUsers.length === 2) {
+        return { chatId: chat._id, user: chat.withUsers };
+      } else {
+        return { chatId: chat._id, group: chat.withUsers };
+      }
+    });
+    res.status(200).json({
+      success: true,
+      message: "Chats retrieved successfully",
+      chats: formattedChats,
+    });
   } catch (error) {
-    res.status(500).send({
+    res.status(500).json({
       success: false,
-      message: "Error WHile Geting contacts",
+      message: "Error while getting chats",
       error,
     });
   }
 };
+
 
 // get photo
 export const profilePhotoController = async (req, res) => {
