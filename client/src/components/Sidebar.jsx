@@ -6,6 +6,7 @@ import AddContactModal from './form/AddContactModal';
 import ProfileButton from './microComponets/ProfileButton';
 import axios from "axios";
 import ThreeDotView from "./microComponets/ThreedotView";
+import { toast } from "react-toastify";
 
 
 function classNames(...classes) {
@@ -17,20 +18,22 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
     const [contacts, setContacts] = useState([]);
     const [calls, setCalls] = useState([]);
     const [chats, setChats] = useState([]);
-    const [selectedContacts, setSelectedContacts] = useState([]);
-    // const [chatWith, setChatWith] = useState("");
+    const [selectedContacts, setSelectedContacts] = useState([auth?.user?._id]);
 
     const getContacts = async () => {
         const res = await axios.get("http://localhost:8000/api/auth/contacts");
         setContacts(res.data)
 
     }
+    const getChats = async () => {
+        const res = await axios.get("http://localhost:8000/api/auth/chats");
+        setChats(res.data)
+
+    }
     useEffect(() => {
         getContacts();
+        getChats();
     }, [auth])
-
-
-
 
     const handleCheckboxChange = (contactId) => {
         setSelectedContacts((prevSelected) => {
@@ -46,10 +49,10 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
     const [showMakeGroupButton, setShowMakeGroupButton] = useState(false);
 
     useEffect(() => {
-        if (selectedContacts.length === 1) {
+        if (selectedContacts.length === 2) {
             setShowAddToChatButton(true);
             setShowMakeGroupButton(false);
-        } else if (selectedContacts.length > 1) {
+        } else if (selectedContacts.length > 2) {
             setShowAddToChatButton(false);
             setShowMakeGroupButton(true);
         } else {
@@ -65,6 +68,33 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
     };
     const openProfile = (data) => {
         viewProfile(data);
+    };
+
+    const handleAddToChat = async () => {
+        // Create a new chat object with selected contacts
+        const withUsers = selectedContacts;
+
+        const res = await axios.post("http://localhost:8000/api/auth/chats", withUsers)
+        if (res.data.success) {
+            toast.success(res.data.message);
+        } else {
+            toast.error(res.data.message);
+        }
+    };
+
+    const handleMakeGroup = async () => {
+         // Create a new chat object with selected contacts
+         const withUsers = selectedContacts;
+
+         // Update the chats state with the new chat
+         setChats((prevChats) => [...prevChats, withUsers]);
+ 
+         const res = await axios.post("http://localhost:8000/api/auth/chats", withUsers)
+         if (res.data.success) {
+             toast.success(res.data.message);
+         } else {
+             toast.error(res.data.message);
+         }
     };
 
     return (
@@ -166,55 +196,56 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                         >
                             <ul className=" relative">
                                 {contacts.map((contact) => (
-                                    <li
-                                        key={contact._id}
-                                        className="relative rounded-md p-3 hover:bg-gray-300"
-                                        onClick={() => handleCheckboxChange(contact._id)}
-                                    >
-                                        <div className=" flex flex-row">
-                                            <div className="w-[25%] h-12">
-                                                <img className="w-12 h-12 rounded-full" src={`http://localhost:8000/api/auth/profile-photo/${contact._id}`} alt="person" />
-                                            </div>
-                                            <div className="ms-2 w-[55%]">
-                                                <h3 className="text-sm font-medium leading-5">
-                                                    {contact.name}
-                                                </h3>
+                                    <div className="flex flex-row">
+                                        <li
+                                            key={contact._id}
+                                            className="relative rounded-md p-3 hover:bg-gray-300 w-[90%]"
+                                            onClick={() => handleCheckboxChange(contact._id)}
+                                        >
+                                            <div className=" flex flex-row">
+                                                <div className="w-[25%] h-12">
+                                                    <img className="w-12 h-12 rounded-full" src={`http://localhost:8000/api/auth/profile-photo/${contact._id}`} alt="person" />
+                                                </div>
+                                                <div className="ms-2 w-[55%]">
+                                                    <h3 className="text-sm font-medium leading-5">
+                                                        {contact.name}
+                                                    </h3>
 
-                                                <ul className="mt-1 flex text-xs font-normal leading-4 text-gray-500 justify-between">
-                                                    <li>{contact.email}</li>
+                                                    <ul className="mt-1 flex text-xs font-normal leading-4 text-gray-500 justify-between">
+                                                        <li>{contact.email}</li>
 
-                                                </ul>
-                                            </div>
-                                            <div className="ms-2 w-[10%]">
-                                                <input
-                                                    id={`addToChat-${contact._id}`}
-                                                    name={`addToChat-${contact._id}`}
-                                                    type="checkbox"
-                                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                                                    checked={selectedContacts.includes(contact._id)}
-                                                    onChange={() => handleCheckboxChange(contact._id)}
+                                                    </ul>
+                                                </div>
+                                                <div className="ms-2 w-[10%]">
+                                                    <input
+                                                        id={`addToChat-${contact._id}`}
+                                                        name={`addToChat-${contact._id}`}
+                                                        type="checkbox"
+                                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                        checked={selectedContacts.includes(contact._id)}
+                                                        onChange={() => handleCheckboxChange(contact._id)}
+                                                    />
+                                                </div>
+                                                <NavLink
+
+                                                    className={classNames(
+                                                        'absolute inset-0 rounded-md',
+                                                        'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2'
+                                                    )}
                                                 />
                                             </div>
-                                            <div className="w-[10%] z-10">
-                                                <ThreeDotView id={contact._id} openProfile={openProfile} />
-                                            </div>
-
-                                            <NavLink
-
-                                                className={classNames(
-                                                    'absolute inset-0 rounded-md',
-                                                    'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2'
-                                                )}
-                                            />
+                                        </li>
+                                        <div className="w-[10%] z-10">
+                                            <ThreeDotView key={contact._id} id={contact._id} openProfile={openProfile} />
                                         </div>
-                                    </li>
+                                    </div>
                                 ))}
                             </ul>
-                            <div className=" absolute -translate-y-52 translate-x-32">{showAddToChatButton && (
-                                <button className="text-white bg-blue-600 rounded-md shadow-xl p-2 mr-2">Add to Chat</button>
+                            <div className="absolute -translate-y-52">{showAddToChatButton && (
+                                <button className="text-white bg-blue-600 rounded-md shadow-xl p-2 ms-auto w-auto" onClick={handleAddToChat}>Add to Chat</button>
                             )}
                                 {showMakeGroupButton && (
-                                    <button className="text-white bg-green-600 rounded-md shadow-xl p-2">Make Group with {selectedContacts.length}</button>
+                                    <button className="text-white bg-green-600 rounded-md shadow-xl p-2" onClick={handleMakeGroup}>Make Group with {selectedContacts.length - 1}</button>
                                 )}</div>
                         </Tab.Panel>
                         <Tab.Panel

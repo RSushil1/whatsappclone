@@ -5,10 +5,12 @@ import {
   forgotPasswordController,
   updateProfileController,
   getProfileController,
-  updateContacts,
-  getContacts,
+  updateContactsController,
+  getContactsController,
+  getChatsController,
   profilePhotoController,
-  profileCoverPhotoController
+  profileCoverPhotoController,
+  updateChatsController
 } from "../controllers/authController.js";
 import {requireSignIn } from "../middlewares/authMiddleware.js";
 import formidable from "express-formidable";
@@ -47,16 +49,22 @@ router.get("/profile/:uid", getProfileController);
 router.put("/profile", requireSignIn,formidable(), updateProfileController);
 
 //update contacts
-router.post("/contacts", requireSignIn, updateContacts);
+router.post("/contacts", requireSignIn, updateContactsController);
 
 //get contacts
-router.get("/contacts", requireSignIn, getContacts);
+router.get("/contacts", requireSignIn, getContactsController);
+
+//get chats
+router.get("/chats", requireSignIn, getChatsController);
 
 //get profile-photo
 router.get("/profile-photo/:uid", profilePhotoController);
 
 //get profile-coverPhoto
 router.get("/profile-coverPhoto/:uid", profileCoverPhotoController);
+
+// add chat
+router.post("/chats", requireSignIn, updateChatsController);
 
 
 export default router;

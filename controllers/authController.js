@@ -1,14 +1,14 @@
 import userModel from "../models/userModel.js";
-
 import { comparePassword, hashPassword } from "./../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
 import fs from "fs";
+import chatModel from "../models/chatModel.js";
 
 
 // register user by signup
 export const registerController = async (req, res) => {
   try {
-    const { name,email,password,answer } = req.fields;
+    const { name, email, password, answer } = req.fields;
     const { photo } = req.files;
     //validations
     if (!name) {
@@ -160,10 +160,10 @@ export const getProfileController = async (req, res) => {
   const _id = req.params.uid;
   try {
     const profile = await userModel.findById(_id)
-                                   .select("id")
-                                   .select("name")
-                                   .select("email")
-                                   .select("bio");                               
+      .select("id")
+      .select("name")
+      .select("email")
+      .select("bio");
     res.json(profile);
   } catch (error) {
     res.status(500).send({
@@ -177,17 +177,17 @@ export const getProfileController = async (req, res) => {
 //update profile
 export const updateProfileController = async (req, res) => {
   try {
-    const { name,password,bio } = req.fields;
-    const { photo,coverPhoto } = req.files;
+    const { name, password, bio } = req.fields;
+    const { photo, coverPhoto } = req.files;
     const user = await userModel.findById(req.user._id);
-    
+
     const hashedPassword = password ? await hashPassword(password) : undefined;
     const updatedUser = await userModel.findByIdAndUpdate(
       user._id,
       {
         name: name || user.name,
         bio: bio || user.bio,
-        password: hashedPassword || user.password, 
+        password: hashedPassword || user.password,
       },
       { new: true }
     );
@@ -215,13 +215,13 @@ export const updateProfileController = async (req, res) => {
 };
 
 //update contacts
-export const updateContacts = async (req, res) => {
+export const updateContactsController = async (req, res) => {
   try {
-    const {email} = req.body;
+    const { email } = req.body;
     const user = await userModel.findById(req.user._id);
 
     const adduser = await userModel.findOne({ email });
-    
+
     if (!adduser) {
       return res.status(200).json({ success: false, message: "contact not found" });
     }
@@ -247,7 +247,25 @@ export const updateContacts = async (req, res) => {
 
 
 // get contacts
-export const getContacts = async (req, res) => {
+export const getContactsController = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user._id);
+    //Get the list of contact _ids from the user object
+    const contactIds = user.contacts;
+
+    // Find all contacts based on their _ids
+    const contacts = await userModel.find({ _id: { $in: contactIds } }).select("_id").select("name").select("email");
+    res.json(contacts);
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Error WHile Geting contacts",
+      error,
+    });
+  }
+};
+// get contacts
+export const getChatsController = async (req, res) => {
   try {
     const user = await userModel.findById(req.user._id);
     //Get the list of contact _ids from the user object
@@ -299,4 +317,33 @@ export const profileCoverPhotoController = async (req, res) => {
   }
 };
 
+
+// update chats
+export const updateChatsController = async (req, res) => {
+  try {
+    const withUsers = req.body; // Array of user IDs
+    console.log(withUsers)
+
+    // Create a new chat
+    const chats = new chatModel({
+        withUsers,
+        messages: [],
+      
+    });
+
+    const savedChat = await chats.save();
+
+    res.status(201).send({
+      success: true,
+      message: "chats added",
+      savedChat,
+    });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Error in chats",
+      error,
+    });
+  }
+};
 
