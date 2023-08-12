@@ -62,8 +62,8 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
     }, [selectedContacts]);
 
 
-    const openChatWith = (person) => {
-        const dataToSend = person;
+    const openChatWith = (chat) => {
+        const dataToSend = chat;
         handleChatWith(dataToSend); // Call the function passed as prop with the data
     };
     const openProfile = (data) => {
@@ -99,7 +99,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
 
     return (
         <div className=" h-screen">
-            <div className="w-full h-[90vh] max-w-md px-2 py-1 sm:px-0 overflow-y-auto">
+            <div className="w-full h-[90vh] max-w-md px-2 py-1 sm:px-0 overflow-y-auto relative">
                 <Tab.Group>
                     <Tab.List className=" flex space-x-1 rounded-xl bg-blue-900/20 p-1">
                         <Tab
@@ -222,7 +222,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                                 'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
                             )}
                         >
-                            <ul className=" relative">
+                            <ul className=" ">
                                 {contacts.map((contact) => (
                                     <div className="flex flex-row">
                                         <li
@@ -269,7 +269,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                                     </div>
                                 ))}
                             </ul>
-                            <div className="absolute -translate-y-52">{showAddToChatButton && (
+                            <div className="fixed mb-[30vh]">{showAddToChatButton && (
                                 <button className="text-white bg-blue-600 rounded-md shadow-xl p-2 ms-auto w-auto" onClick={handleAddToChat}>Add to Chat</button>
                             )}
                                 {showMakeGroupButton && (

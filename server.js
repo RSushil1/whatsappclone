@@ -44,22 +44,25 @@ const io = new Server(server, {
     }
   }); // Pass the HTTP server instance to the Socket.IO Server
 
-io.on('connection', socket => {
+  io.on('connection', socket => {
     const id = socket.handshake.query.id;
     socket.join(id);
+    console.log(id);
     
     socket.on('send-message', ({ recipients, text }) => {
         recipients.forEach(recipient => {
             const newRecipients = recipients.filter(r => r !== recipient);
             newRecipients.push(id);
-            io.to(recipient).emit('receive-message', { // Use io.to() instead of socket.broadcast.to()
+            io.to(recipient).emit('receive-message', {
                 recipients: newRecipients,
                 sender: id,
-                text
+                content: text,
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             });
         });
     });
 });
+
 
 
 
