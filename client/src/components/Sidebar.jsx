@@ -28,7 +28,6 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
     const getChats = async () => {
         const res = await axios.get("http://localhost:8000/api/auth/chats");
         setChats(res.data.chats)
-        console.log(res.data.chats)
     }
     useEffect(() => {
         getContacts();

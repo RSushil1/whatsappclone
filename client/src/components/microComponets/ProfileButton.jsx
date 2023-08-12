@@ -1,10 +1,9 @@
 import { Menu, Transition } from '@headlessui/react'
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment} from 'react'
 import { ChevronUpIcon } from '@heroicons/react/20/solid'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { UseAuth } from '../../context/Auth';
-import UpdateProfileModal from '../form/UpdateProfileModal';
 
 export default function ProfileButton(props) {
   const [auth] = UseAuth();
@@ -72,31 +71,6 @@ export default function ProfileButton(props) {
                       />
                     )}
                    View Profile
-                  </button>
-                )}
-              </Menu.Item>
-            </div>
-            <div className="px-1 py-1 ">
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    
-                    className={`${
-                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      <EditActiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <EditInactiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    )}
-                   <UpdateProfileModal/>
                   </button>
                 )}
               </Menu.Item>

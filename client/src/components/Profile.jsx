@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { UseAuth } from '../context/Auth';
+import UpdateProfileModal from './form/UpdateProfileModal';
 
 const Profile = (props) => {
   const [profile, setProfile] = useState("");
-  const id = props.openProfile;
-  console.log(id)
+  const [auth] = UseAuth();
+  const id = props.profile;
+  
   const getProfile = async () => {
     try {
       const res = await axios.get(`http://localhost:8000/api/auth/profile/${id}`);
@@ -17,7 +20,7 @@ const Profile = (props) => {
 
   useEffect(() => {
     getProfile();
-  }, [id]);
+  }, [id,auth]);
 
 
   return (
@@ -26,7 +29,11 @@ const Profile = (props) => {
 
         <div><img className='rounded-lg w-full bg-blue-500 h-[30vh]' src={`http://localhost:8000/api/auth/profile-coverPhoto/${id}`} alt={profile.name} /></div>
         <div className='flex flex-row m-3'>
-          <div className='w-[20%]'><img className='h-32 w-32 rounded-full' src={`http://localhost:8000/api/auth/profile-photo/${id}`} alt={profile.name} /></div>
+          <div className='w-[20%]'><img className='h-32 w-32 rounded-full' src={`http://localhost:8000/api/auth/profile-photo/${id}`} alt={profile.name} />
+          {auth?.user._id === id ?
+            (<button className='text-[12px] font-bold'><UpdateProfileModal/>Edit</button>) : ("")
+          }
+          </div>
 
             <div className='w-[80%]'>
               <div className="px-4 sm:px-0">

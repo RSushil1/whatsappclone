@@ -6,15 +6,14 @@ import SocketProvider from '../context/SocketProvider';
 
 const Dashboard = () => {
   const [chatWith, setChatWith] = useState("");
-  const [profile, setProfile] = useState(false);
-  const [openProfile, setOpenProfile] = useState("");
+  const [profile, setProfile] = useState("");
 
   const handleChatWith = (data) => {
     setChatWith(data);
-    setProfile(false)
+    setProfile(false);
   };
   const viewProfile = (data) => {
-    setOpenProfile(data);
+    setProfile(data);
   };
 
   return (
@@ -26,7 +25,7 @@ const Dashboard = () => {
       </div>
       <div className='hidden md:block  md:w-[70%] border border-green-950 bg-blue-100'>
         {profile?(
-            <Profile openProfile={openProfile}/>
+            <Profile profile={profile}/>
           ):(  
             <Chatroom chatWith={chatWith} />
            )

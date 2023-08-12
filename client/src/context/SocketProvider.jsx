@@ -12,8 +12,6 @@ const SocketProvider = ({children}) => {
   const [auth] = UseAuth();
   const id = auth?.user?._id
 
-    console.log(id)
-
     useEffect(()=>{
         const newSocket = io('http://localhost:8000',{query:{id}})
         setSocket(newSocket)
