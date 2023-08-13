@@ -20,13 +20,11 @@ export default function ThreeDotView(props) {
       const res = await axios.delete(`http://localhost:8000/api/auth/contacts/${id}`);
       if (res.data.success) {
         toast.success(res.data.message);
-        const updatedContacts = [...auth.user.contacts, res.data.contacts];
+        const updatedContacts = [res.data.contacts];
         setAuth({
           ...auth,
-          user: {
-            ...auth.user,
-            contacts: updatedContacts
-          }})
+          contacts: updatedContacts
+        })
         // localStorage.setItem("whatsapp", JSON.stringify(auth));
       }else{
         toast.error(res.data.message);

@@ -61,7 +61,7 @@ export const registerController = async (req, res) => {
   }
 };
 
-//POST Login user
+//Login a user
 export const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -103,8 +103,7 @@ export const loginController = async (req, res) => {
       user: {
         _id: user._id,
         name: user.name,
-        email: user.email,
-        contacts: user.contacts
+        email: user.email
       },
       token,
     });
@@ -392,3 +391,47 @@ export const updateChatsController = async (req, res) => {
   }
 };
 
+// Add a new message to a chat
+export const updateMessagesController = async (req, res) => {
+  try {
+    const chatId = req.params.chatId;
+    const { sender, content } = req.body;
+
+    const chat = await chatModel.findById(chatId);
+    if (!chat) {
+      return res.status(404).json({ error: "Chat not found" });
+    }
+
+    const newMessage = { sender, content };
+    chat.messages.push(newMessage);
+    await chat.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Message added successfully",
+      chats: chat,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to add message" });
+  }
+};
+// Add a all messages from a chat
+export const getMessagesController = async (req, res) => {
+  try {
+    const chatId = req.params.chatId;
+
+    const chat = await chatModel.findById(chatId);
+    if (!chat) {
+      return res.status(404).json({ error: "Chat not found" });
+    }
+    const allMessages = chat.messages;
+
+    res.status(200).json({
+      success: true,
+      message: "Message retrieved successfully",
+      allMessages,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieved message" });
+  }
+};

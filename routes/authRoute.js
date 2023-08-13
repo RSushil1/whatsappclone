@@ -11,7 +11,9 @@ import {
   getChatsController,
   profilePhotoController,
   profileCoverPhotoController,
-  updateChatsController
+  updateChatsController,
+  updateMessagesController,
+  getMessagesController
 } from "../controllers/authController.js";
 import {requireSignIn } from "../middlewares/authMiddleware.js";
 import formidable from "express-formidable";
@@ -67,8 +69,14 @@ router.get("/profile-coverPhoto/:uid", profileCoverPhotoController);
 // add chat
 router.post("/chats", requireSignIn, updateChatsController);
 
+// add chat
+router.post("/messages/:chatId", requireSignIn, updateMessagesController);
+
 //get chats
 router.get("/chats", requireSignIn, getChatsController);
+
+//get messages
+router.get("/messages/:chatId", requireSignIn, getMessagesController);
 
 
 export default router;

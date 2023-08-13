@@ -7,8 +7,6 @@ import authRoutes from "./routes/authRoute.js";
 import cors from "cors";
 
 
-
-
 //configure env
 dotenv.config();
 

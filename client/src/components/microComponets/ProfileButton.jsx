@@ -29,7 +29,7 @@ export default function ProfileButton(props) {
     <div className="top-16 w-62 text-right">
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="h-[9vh] px-3 inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 py-1 text-sm font-medium text-white hover:bg-opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <Menu.Button className="h-[9vh] px-3 inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 py-1 text-sm font-medium text-white hover:bg-blue-300 hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
           <div className="flex flex-row">
                     <div ><img className="w-10 h-10 rounded-full" src={`http://localhost:8000/api/auth/profile-photo/${auth?.user?._id}`} alt="profile" /></div>
                     <div className='ms-3'>Welcome: {name} <br /> ID: {email}</div>
@@ -49,7 +49,7 @@ export default function ProfileButton(props) {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute -translate-y-[6rem] translate-x-10 top-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <Menu.Items className="absolute -translate-y-[6rem] translate-x-10 top-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-40">
             <div className="px-1 py-1 ">
               <Menu.Item>
                 {({ active }) => (
