@@ -17,20 +17,20 @@ const Chatroom = (props) => {
         e.preventDefault();
         try {
             // Emit the message event to the server
-            chat.user?(
+            chat.user ? (
                 socket.emit('send-message', {
                     recipients: chat.user, // Pass the user IDs as recipients
                     text: messageByMe,
                 })
-            ):(
+            ) : (
                 socket.emit('send-message', {
                     recipients: chat.group, // Pass the user IDs as recipients
                     text: messageByMe,
                 })
             )
 
-            
-           
+
+
 
             setMessageByMe('');
         } catch (error) {
@@ -108,8 +108,10 @@ const Chatroom = (props) => {
                         {messages.map((message, index) => (
                             <div key={index} className={`w-full flex justify-${message.sender === auth?.user._id ? 'end' : 'start'}`} id='chatDiv'>
                                 <div className={`flex flex-col place-items-${message.sender === auth?.user._id ? 'end' : 'start'}`}>
-                                    <div className={`flex flex-row p-1 rounded-lg shadow-md m-1 ${message.sender === auth?.user._id ? 'bg-red-200' : ' bg-orange-200'} ${message.sender === auth?.user._id ? 'mr-1' : 'ml-1'}`}>
-                                        {message.content} <p className='ms-2 text-[10px]'>{message.timestamp}</p>
+                                    <div className={`max-w-[40vw] flex flex-row ps-2 pt-1 pb-1 rounded-lg shadow-md m-1 ${message.sender === auth?.user._id ? 'bg-red-200' : ' bg-orange-200'} ${message.sender === auth?.user._id ? 'mr-1' : 'ml-1'}`}>
+                                        <div className="w-[80%] break-words text-ellipsis ml-2"> {/* Adjust max width as needed */}
+                                            {message.content}
+                                        </div><div className='w-[20%]'><p className='ms-2 text-[10px]'>{message.timestamp}</p></div>
                                     </div>
                                     <div>
                                         <p className='text-[10px]'>{message.sender === auth?.user._id ? 'you' : 'otherUser'}</p>

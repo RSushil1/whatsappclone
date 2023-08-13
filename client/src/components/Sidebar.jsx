@@ -14,7 +14,7 @@ function classNames(...classes) {
 }
 
 export default function Sidebar({ handleChatWith, viewProfile }) {
-    const [auth] = UseAuth();
+    const [auth, setAuth] = UseAuth();
     const [contacts, setContacts] = useState([]);
     const [calls, setCalls] = useState([]);
     const [chats, setChats] = useState([]);
@@ -27,7 +27,14 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
     }
     const getChats = async () => {
         const res = await axios.get("http://localhost:8000/api/auth/chats");
-        setChats(res.data.chats)
+        setChats(res.data.chats);
+        setAuth({
+            ...auth,
+            user: {
+                ...auth.user,
+                chats: res.data.chats
+            }
+        })
     }
     useEffect(() => {
         getContacts();
@@ -171,24 +178,39 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                                             <div className="ms-2">
                                                 {chat.user && (
                                                     <h3 className="text-sm font-medium leading-5">
-                                                        {chat.user.map(id => (
-                                                            contacts.find(contact => contact._id === id)?.name || 'ME'
-                                                        )).join(', ')}
+                                                        {chat.user
+                                                            .filter(id => id !== auth?.user._id) // Filter out my own id
+                                                            .map(id => (
+                                                                contacts.find(contact => contact._id === id)?.name || 'Unknown'
+                                                            ))
+                                                            .join(', ')}
                                                     </h3>
                                                 )}
                                                 {chat.group && (
                                                     <h3 className="text-sm font-medium leading-5">
-                                                        {chat.group.map(id => (
-                                                            contacts.find(contact => contact._id === id)?.name || 'ME'
-                                                        )).join(', ')}
+                                                        {chat.group
+                                                            .map(id => {
+                                                                if (id === auth?.user._id) {
+                                                                    return "Me";
+                                                                } else {
+                                                                    const contact = contacts.find(contact => contact._id === id);
+                                                                    return contact ? contact.name : "Unknown";
+                                                                }
+                                                            })
+                                                            .join(', ')}
                                                     </h3>
                                                 )}
-                                                <ul className="mt-1 flex text-xs font-normal leading-4 text-gray-500 justify-between">
-                                                    <li>{chat.user && (
+
+                                                <ul className="mt-1 flex flex-row text-xs font-normal leading-4 text-gray-500">
+                                                    <li className="flex-grow">
+                                                        {chat.user && (
                                                         <p className="text-sm leading-3">
-                                                            {chat.user.map(id => (
-                                                                contacts.find(contact => contact._id === id)?.email || 'ME'
-                                                            )).join(', ')}
+                                                            {chat.user
+                                                                .filter(id => id !== auth?.user._id) // Filter out my own id
+                                                                .map(id => (
+                                                                    contacts.find(contact => contact._id === id)?.email || 'Unknown'
+                                                                ))
+                                                                .join(', ')}
                                                         </p>
                                                     )}
                                                         {chat.group && (
@@ -198,7 +220,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                                                                 )).join(', ')}
                                                             </p>
                                                         )}</li>
-                                                    <li className=" justify-between ms-3">last seen </li>
+                                                    {/* <li className=" text-right ms-3">last seen </li> */}
                                                 </ul>
                                             </div>
 
@@ -221,7 +243,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                                 'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
                             )}
                         >
-                            <ul className=" ">
+                            <ul className="relative">
                                 {contacts.map((contact) => (
                                     <div className="flex flex-row">
                                         <li
@@ -268,7 +290,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                                     </div>
                                 ))}
                             </ul>
-                            <div className="fixed mb-[30vh]">{showAddToChatButton && (
+                            <div className="absolute">{showAddToChatButton && (
                                 <button className="text-white bg-blue-600 rounded-md shadow-xl p-2 ms-auto w-auto" onClick={handleAddToChat}>Add to Chat</button>
                             )}
                                 {showMakeGroupButton && (
