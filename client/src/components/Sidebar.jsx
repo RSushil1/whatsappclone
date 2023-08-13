@@ -28,13 +28,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
     const getChats = async () => {
         const res = await axios.get("http://localhost:8000/api/auth/chats");
         setChats(res.data.chats);
-        setAuth({
-            ...auth,
-            user: {
-                ...auth.user,
-                chats: res.data.chats
-            }
-        })
+       
     }
     useEffect(() => {
         getContacts();
@@ -83,6 +77,13 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
         const res = await axios.post("http://localhost:8000/api/auth/chats", withUsers)
         if (res.data.success) {
             toast.success(res.data.message);
+            setAuth({
+                ...auth,
+                user: {
+                  ...auth.user,
+                  chats: res.data.savedChat
+                }});
+                setSelectedContacts([auth?.user?._id]);
         } else {
             toast.error(res.data.message);
         }
@@ -98,6 +99,13 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
         const res = await axios.post("http://localhost:8000/api/auth/chats", withUsers)
         if (res.data.success) {
             toast.success(res.data.message);
+            setAuth({
+                ...auth,
+                user: {
+                  ...auth.user,
+                  chats: res.data.savedChat
+                }});
+                setSelectedContacts([auth?.user?._id]);
         } else {
             toast.error(res.data.message);
         }
@@ -204,7 +212,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                                                 <ul className="mt-1 flex flex-row text-xs font-normal leading-4 text-gray-500">
                                                     <li className="flex-grow">
                                                         {chat.user && (
-                                                        <p className="text-sm leading-3">
+                                                        <p className="text-xm leading-3">
                                                             {chat.user
                                                                 .filter(id => id !== auth?.user._id) // Filter out my own id
                                                                 .map(id => (
@@ -214,7 +222,7 @@ export default function Sidebar({ handleChatWith, viewProfile }) {
                                                         </p>
                                                     )}
                                                         {chat.group && (
-                                                            <p className="text-sm leading-3">
+                                                            <p className="text-xm leading-3">
                                                                 {chat.group.map(id => (
                                                                     contacts.find(contact => contact._id === id)?.email || 'ME'
                                                                 )).join(', ')}

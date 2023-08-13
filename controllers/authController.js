@@ -214,7 +214,7 @@ export const updateProfileController = async (req, res) => {
   }
 };
 
-//update contacts
+//create contacts
 export const updateContactsController = async (req, res) => {
   try {
     const { email } = req.body;
@@ -245,6 +245,42 @@ export const updateContactsController = async (req, res) => {
   }
 };
 
+// Delete contacts
+export const deleteContactsController = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const contactId = req.params.cid;
+
+    // Find the user by ID and update the contacts array
+    const user = await userModel.findByIdAndUpdate(
+      userId,
+      { $pull: { contacts: contactId } },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const contacts = await userModel.findById(userId).select("contacts");
+    res.json({
+      success: true,
+      message: "Contact deleted successfully",
+      contacts
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error while deleting contact",
+      error: error.message,
+    });
+  }
+};
+
+
 
 // get contacts
 export const getContactsController = async (req, res) => {
@@ -264,6 +300,7 @@ export const getContactsController = async (req, res) => {
     });
   }
 };
+
 // get chats
 export const getChatsController = async (req, res) => {
   try {
@@ -327,11 +364,10 @@ export const profileCoverPhotoController = async (req, res) => {
 };
 
 
-// update chats
+// add chats
 export const updateChatsController = async (req, res) => {
   try {
     const withUsers = req.body; // Array of user IDs
-    console.log(withUsers)
 
     // Create a new chat
     const chats = new chatModel({

@@ -6,6 +6,7 @@ import {
   updateProfileController,
   getProfileController,
   updateContactsController,
+  deleteContactsController,
   getContactsController,
   getChatsController,
   profilePhotoController,
@@ -48,8 +49,11 @@ router.get("/profile/:uid", getProfileController);
 //update profile
 router.put("/profile", requireSignIn,formidable(), updateProfileController);
 
-//update contacts
+//create contacts
 router.post("/contacts", requireSignIn, updateContactsController);
+
+//create contacts
+router.delete("/contacts/:cid", requireSignIn, deleteContactsController);
 
 //get contacts
 router.get("/contacts", requireSignIn, getContactsController);

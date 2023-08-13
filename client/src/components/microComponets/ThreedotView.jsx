@@ -1,16 +1,41 @@
 import { Menu, Transition } from '@headlessui/react'
-import { Fragment, useEffect, useRef, useState } from 'react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import { Fragment } from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { UseAuth } from '../../context/Auth';
 
 export default function ThreeDotView(props) {
   const id = props.id;
+  const [auth,setAuth] = UseAuth();
 
   const handleViewProfile = ()=>{
     const dataToSend = id;
     props.openProfile(dataToSend);
 
   }
+
+  const handleDeleteContacts = async () => {
+    try {
+      const res = await axios.delete(`http://localhost:8000/api/auth/contacts/${id}`);
+      if (res.data.success) {
+        toast.success(res.data.message);
+        const updatedContacts = [...auth.user.contacts, res.data.contacts];
+        setAuth({
+          ...auth,
+          user: {
+            ...auth.user,
+            contacts: updatedContacts
+          }})
+        // localStorage.setItem("whatsapp", JSON.stringify(auth));
+      }else{
+        toast.error(res.data.message);
+      }
+    } catch (error) {
+      toast.error("server error");
+    }
+
+}
 
   return (
     <div className="text-right">
@@ -59,6 +84,7 @@ export default function ThreeDotView(props) {
               <Menu.Item>
                 {({ active }) => (
                   <button
+                  onClick={handleDeleteContacts}
                     className={`${
                       active ? 'bg-violet-500 text-white' : 'text-gray-900'
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
@@ -83,90 +109,6 @@ export default function ThreeDotView(props) {
         </Transition>
       </Menu>
     </div>
-  )
-}
-
-function EditInactiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 13V16H7L16 7L13 4L4 13Z"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-    </svg>
-  )
-}
-
-function EditActiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 13V16H7L16 7L13 4L4 13Z"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-    </svg>
-  )
-}
-
-function DuplicateInactiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 4H12V12H4V4Z"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-      <path
-        d="M8 8H16V16H8V8Z"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-    </svg>
-  )
-}
-
-function DuplicateActiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 4H12V12H4V4Z"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-      <path
-        d="M8 8H16V16H8V8Z"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-    </svg>
   )
 }
 
@@ -228,36 +170,6 @@ function ArchiveActiveIcon(props) {
         strokeWidth="2"
       />
       <path d="M8 12H12" stroke="#A78BFA" strokeWidth="2" />
-    </svg>
-  )
-}
-
-function MoveInactiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M10 4H16V10" stroke="#A78BFA" strokeWidth="2" />
-      <path d="M16 4L8 12" stroke="#A78BFA" strokeWidth="2" />
-      <path d="M8 6H4V16H14V12" stroke="#A78BFA" strokeWidth="2" />
-    </svg>
-  )
-}
-
-function MoveActiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M10 4H16V10" stroke="#C4B5FD" strokeWidth="2" />
-      <path d="M16 4L8 12" stroke="#C4B5FD" strokeWidth="2" />
-      <path d="M8 6H4V16H14V12" stroke="#C4B5FD" strokeWidth="2" />
     </svg>
   )
 }
