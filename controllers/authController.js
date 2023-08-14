@@ -303,7 +303,7 @@ export const getContactsController = async (req, res) => {
 // get chats
 export const getChatsController = async (req, res) => {
   try {
-    const chats = await chatModel.find({ withUsers: { $in: [req.user._id] } });
+    const chats = await chatModel.find({ 'withUsers.contactId._id' : { $in: [req.user._id] } });
 
     const formattedChats = chats.map(chat => {
       // const otherUsers = chat.withUsers.filter(userId => userId !== req.user._id);
