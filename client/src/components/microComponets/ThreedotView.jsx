@@ -17,7 +17,7 @@ export default function ThreeDotView(props) {
 
   const handleDeleteContacts = async () => {
     try {
-      const res = await axios.delete(`https://echochatserver.vercel.app/api/auth/contacts/${id}`);
+      const res = await axios.delete(`http://localhost:8000/api/auth/contacts/${id}`);
       if (res.data.success) {
         toast.success(res.data.message);
         const updatedContacts = [res.data.contacts];
