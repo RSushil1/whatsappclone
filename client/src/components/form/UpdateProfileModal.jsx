@@ -32,7 +32,7 @@ export default function UpdateProfileModal() {
             formData.append("password", password);
             formData.append("photo", photo);
             formData.append("coverPhoto", coverPhoto);
-            const res = await axios.put('http://localhost:8000/api/auth/profile', formData);
+            const res = await axios.put('/api/auth/profile', formData);
 
             if (res.data.success) {
                 toast.success(res.data.message);

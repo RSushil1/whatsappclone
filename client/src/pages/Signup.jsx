@@ -23,7 +23,7 @@ const Signup = () => {
             formData.append("password", password);
             formData.append("answer", answer);
             formData.append("photo", photo);
-            const res = await axios.post('http://localhost:8000/api/auth/signup', formData);
+            const res = await axios.post('/api/auth/signup', formData);
 
             if (res.data.success) {
                 toast.success(res.data.message);

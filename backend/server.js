@@ -14,7 +14,7 @@ dotenv.config();
 connectDB();
 
 //PORT
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8000;
 
 
 //rest object
@@ -45,7 +45,6 @@ const io = new Server(server, {
   io.on('connection', socket => {
     const id = socket.handshake.query.id;
     socket.join(id);
-    console.log(id);
     
     socket.on('send-message', ({ recipients, text }) => {
         recipients.forEach(recipient => {

@@ -14,7 +14,7 @@ export default function AddContactModal() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8000/api/auth/contacts", {
+      const res = await axios.post("/api/auth/contacts", {
         email
       });
       if (res.data.success) {
