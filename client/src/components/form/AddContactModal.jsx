@@ -14,7 +14,7 @@ export default function AddContactModal() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/auth/contacts", {
+      const res = await axios.post("https://echochatserver.vercel.app/api/auth/contacts", {
         email
       });
       if (res.data.success) {
